@@ -30,6 +30,15 @@ import UIKit
 
 class SettingsViewController : UITableViewController {
 
+    @IBInspectable open var viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
+    @IBInspectable open var cellBackgroundColor: UIColor? = UIColor.white
+    @IBInspectable open var cellTextColor: UIColor? = UIColor.black
+    @IBInspectable open var cellSecondaryTextColor: UIColor? = UIColor.darkGray
+    @IBInspectable open var tintColor: UIColor? = nil
+    @IBInspectable open var separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
+    @IBInspectable open var selectionColor: UIColor? = UIColor.lightGray
+    @IBInspectable open var forceRoundedCorners: Bool = false
+
     struct Appearance {
         let viewBackgroundColor: UIColor?
         let cellBackgroundColor: UIColor?
@@ -40,7 +49,25 @@ class SettingsViewController : UITableViewController {
         let selectionColor: UIColor?
         let forceRoundedCorners: Bool
 
-        init (splitVC: SwiftySettingsViewController) {
+        init(viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
+             cellBackgroundColor: UIColor? = UIColor.white,
+             cellTextColor: UIColor? = UIColor.black,
+             cellSecondaryTextColor: UIColor? = UIColor.darkGray,
+             tintColor: UIColor? = nil,
+             separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
+             selectionColor: UIColor? = UIColor.lightGray,
+             forceRoundedCorners: Bool = false) {
+            self.viewBackgroundColor = viewBackgroundColor
+            self.cellBackgroundColor = cellBackgroundColor
+            self.cellTextColor = cellTextColor
+            self.cellSecondaryTextColor = cellSecondaryTextColor
+            self.tintColor = tintColor
+            self.separatorColor = separatorColor
+            self.selectionColor = selectionColor
+            self.forceRoundedCorners = forceRoundedCorners
+        }
+
+        init(splitVC: SettingsViewController) {
             self.viewBackgroundColor = splitVC.viewBackgroundColor
             self.cellBackgroundColor = splitVC.cellBackgroundColor
             self.cellTextColor = splitVC.cellTextColor
@@ -52,26 +79,44 @@ class SettingsViewController : UITableViewController {
         }
     }
 
+    open var settings: SwiftySettings! {
+        didSet{
+            self.load(settings.main)
+        }
+    }
+
     var sections: [Section] = []
     var appearance: Appearance
     var observerTokens: [NSObjectProtocol] = []
     var editingIndexPath: IndexPath? = nil
 
     var shouldDecorateWithRoundCorners: Bool {
-
-        if appearance.forceRoundedCorners {
+        if self.forceRoundedCorners {
             return true
-        }
-
-        if let masterNC = self.splitViewController?.viewControllers.first as? UINavigationController {
-            return !(masterNC.viewControllers.last == self)
         }
         return false
     }
 
-    init (appearance: Appearance) {
+    public convenience init(settings: SwiftySettings) {
+        self.init(nibName: nil, bundle: nil)
+        self.settings = settings
+    }
+
+    public convenience init (appearance: Appearance) {
+        self.init(nibName: nil, bundle: nil)
         self.appearance = appearance
-        super.init(nibName: nil, bundle: nil)
+    }
+
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        self.appearance = Appearance(viewBackgroundColor: self.viewBackgroundColor,
+                                     cellBackgroundColor: self.cellBackgroundColor,
+                                     cellTextColor: self.cellTextColor,
+                                     cellSecondaryTextColor: self.cellSecondaryTextColor,
+                                     tintColor: self.tintColor,
+                                     separatorColor: self.separatorColor,
+                                     selectionColor: self.selectionColor,
+                                     forceRoundedCorners: self.forceRoundedCorners)
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
     deinit {
@@ -94,8 +139,8 @@ class SettingsViewController : UITableViewController {
 
     func load(_ screen: Screen) {
         self.sections = screen.sections
-        self.title = screen.title
         DispatchQueue.main.async { [unowned self] in
+            self.title = screen.title
             self.tableView.reloadData()
         }
     }
@@ -197,39 +242,27 @@ extension SettingsViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-        guard let splitVC = splitViewController as? SwiftySettingsViewController,
-                  let masterNC = splitVC.viewControllers.first as? UINavigationController,
-                  let detailNC = splitVC.viewControllers.last as? UINavigationController,
-                  let masterVC = masterNC.topViewController as? SettingsViewController
-
-        else {
-            return
-        }
-
-
         let node = sections[indexPath.section].items[indexPath.row]
 
         switch (node) {
         case let item as Screen:
-            let vc = SettingsViewController(appearance: appearance)
-            let nc = splitVC.isCollapsed ? masterNC: detailNC
+            let vc = SettingsViewController(appearance: self.appearance)
             vc.load(item)
-            nc.pushViewController(vc, animated: splitVC.isCollapsed)
+            self.navigationController?.pushViewController(vc, animated: true)
         case let item as OptionsButton:
-            let vc = SettingsViewController(appearance: appearance)
-            let nc = splitVC.isCollapsed ? masterNC: detailNC
+            let vc = SettingsViewController(appearance: self.appearance)
             let screen = Screen(title: item.title) {
                 [Section(title: "") { item.options }]
             }
             vc.load(screen)
-            nc.popToRootViewController(animated: false)
-            nc.pushViewController(vc, animated: splitVC.isCollapsed)
+            self.navigationController?.popToRootViewController(animated: false)
+            self.navigationController?.pushViewController(vc, animated: true)
         case let item as Option:
             item.selected = true
             tableView.reloadData()
             if item.navigateBack {
                 let _ = navigationController?.popViewController(animated: true)
-                masterVC.tableView.reloadData()
+                self.tableView.reloadData()
             }
 
         default:
@@ -243,8 +276,8 @@ extension SettingsViewController {
         func decorateCellWithRoundCorners(_ cell: UITableViewCell,
                                           roundingCorners corners: UIRectCorner) {
             let maskPath = UIBezierPath(roundedRect: cell.bounds,
-                byRoundingCorners:  corners ,
-                cornerRadii: CGSize(width: 5.0, height: 5.0))
+                                        byRoundingCorners:  corners ,
+                                        cornerRadii: CGSize(width: 5.0, height: 5.0))
             let shapeLayer = CAShapeLayer()
             shapeLayer.frame = cell.bounds
             shapeLayer.path = maskPath.cgPath
@@ -279,33 +312,33 @@ extension SettingsViewController : UITextFieldDelegate {
         let nc = NotificationCenter.default
 
         observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil,
-            queue: OperationQueue.main) { [weak self] note in
+                                             queue: OperationQueue.main) { [weak self] note in
 
-                guard let userInfo = note.userInfo as? [String: AnyObject],
-                    let keyboardRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
-                else {
-                        fatalError("Could not extract keyboard CGRect")
-                }
-                var contentInsets = UIEdgeInsets(top: 0.0, left: 0.0,
-                    bottom: keyboardRect.size.height, right: 0.0)
+                                                guard let userInfo = note.userInfo as? [String: AnyObject],
+                                                    let keyboardRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+                                                    else {
+                                                        fatalError("Could not extract keyboard CGRect")
+                                                }
+                                                var contentInsets = UIEdgeInsets(top: 0.0, left: 0.0,
+                                                                                 bottom: keyboardRect.size.height, right: 0.0)
 
-                if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
-                    contentInsets = UIEdgeInsetsMake(0.0, 0.0, (keyboardRect.size.height), 0.0);
-                }
-                self?.tableView.contentInset = contentInsets;
-                self?.tableView.scrollIndicatorInsets = contentInsets;
+                                                if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
+                                                    contentInsets = UIEdgeInsetsMake(0.0, 0.0, (keyboardRect.size.height), 0.0);
+                                                }
+                                                self?.tableView.contentInset = contentInsets;
+                                                self?.tableView.scrollIndicatorInsets = contentInsets;
 
-                if let scrollToIndexPath = self?.editingIndexPath {
-                    self?.tableView.scrollToRow(at: scrollToIndexPath,
-                        at: .middle,
-                        animated:false)
-                }
-            })
+                                                if let scrollToIndexPath = self?.editingIndexPath {
+                                                    self?.tableView.scrollToRow(at: scrollToIndexPath,
+                                                                                at: .middle,
+                                                                                animated:false)
+                                                }
+        })
         observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil,
-            queue: OperationQueue.main) { [weak self] note in
-                self?.tableView.contentInset = UIEdgeInsets.zero;
-                self?.tableView.scrollIndicatorInsets = UIEdgeInsets.zero;
-            })
+                                             queue: OperationQueue.main) { [weak self] note in
+                                                self?.tableView.contentInset = UIEdgeInsets.zero;
+                                                self?.tableView.scrollIndicatorInsets = UIEdgeInsets.zero;
+        })
     }
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -324,20 +357,20 @@ extension SettingsViewController : UITextFieldDelegate {
 //MARK: Private
 
 private extension SettingsViewController {
-
+    
     func setupTableView() {
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorInset = UIEdgeInsets.zero;
         tableView.estimatedRowHeight = 100
         tableView.estimatedSectionHeaderHeight = 22
         tableView.rowHeight = UITableViewAutomaticDimension
-
+        
         // Configure appearance
         tableView.backgroundColor = appearance.viewBackgroundColor
         tableView.separatorColor = appearance.separatorColor;
-
+        
         tableView.registerClass(SwitchCell.self, type: .cell)
         tableView.registerClass(SliderCell.self, type: .cell)
         tableView.registerClass(OptionCell.self, type: .cell)

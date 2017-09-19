@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0F3FEF3FA38587D35DF13AF3 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE2B1C4A11F7F3515E798683 /* Pods_Example.framework */; };
 		A40D675D973B4E8E1D0BDD69 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68CAEB0FDEC9AE9876A22A0E /* Pods_Tests.framework */; };
-		F11D98371B7F53810014FF80 /* SwiftySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11D98351B7F52F10014FF80 /* SwiftySettingsViewController.swift */; };
 		F11D983A1B7F5E510014FF80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F11D98381B7F5E510014FF80 /* Main.storyboard */; };
 		F13BBBF71B8B16080077571E /* OptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13BBBF61B8B16080077571E /* OptionsTests.swift */; };
 		F13BBBF81B8B166E0077571E /* SwiftySettings.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F1E045681B78F69900819DCD /* SwiftySettings.framework */; };
@@ -76,7 +75,6 @@
 		68CAEB0FDEC9AE9876A22A0E /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8867523DCD93CFD46218121E /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		EE2B1C4A11F7F3515E798683 /* Pods_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F11D98351B7F52F10014FF80 /* SwiftySettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftySettingsViewController.swift; path = Source/SwiftySettingsViewController.swift; sourceTree = "<group>"; };
 		F11D98391B7F5E510014FF80 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
 		F13BBBEC1B8B14680077571E /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F13BBBF01B8B14680077571E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -230,7 +228,6 @@
 				F1635A7E1B8672E80031EBA3 /* UI */,
 				F1E045751B78F71200819DCD /* Info.plist */,
 				F18627441B74D36B004E5529 /* SwiftySettings.swift */,
-				F11D98351B7F52F10014FF80 /* SwiftySettingsViewController.swift */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -351,6 +348,7 @@
 					};
 					F1ED23721B78F36100054FFB = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = D29C267S74;
 						LastSwiftMigration = 0810;
 					};
 				};
@@ -524,7 +522,6 @@
 				F1635A911B8674F80031EBA3 /* OptionCell.swift in Sources */,
 				F1635A921B8674F80031EBA3 /* SectionHeaderFooter.swift in Sources */,
 				F1635A811B86735B0031EBA3 /* SettingsCell.swift in Sources */,
-				F11D98371B7F53810014FF80 /* SwiftySettingsViewController.swift in Sources */,
 				F1E0457D1B78FBBF00819DCD /* SwiftySettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -760,6 +757,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
+				DEVELOPMENT_TEAM = D29C267S74;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -777,6 +775,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
+				DEVELOPMENT_TEAM = D29C267S74;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
