@@ -272,7 +272,6 @@ extension SwiftySettingsViewController {
                 [Section(title: "") { item.options }]
             }
             let vc = SwiftySettingsViewController(appearance: self.appearance, screen: screen)
-            self.navigationController?.popToRootViewController(animated: false)
             self.navigationController?.pushViewController(vc, animated: true)
         case let item as Option:
             item.selected = true
