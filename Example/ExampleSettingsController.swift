@@ -118,7 +118,12 @@ class ExampleSettingsController: SwiftySettingsViewController {
             },
             Section(title: "Administrator") {
                 [TextField(key: "password", title: "Password", secureTextEntry: true)]
-            }]
+            },
+            Section(title: "About") {
+                [TextOnly(title: "Version", subTitle: "1.0.0-leetal", icon: nil, onClickedClosure: {
+                    print("Clicked!!")
+                })]
+                }]
         }
     }
 

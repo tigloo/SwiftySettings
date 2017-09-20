@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0F3FEF3FA38587D35DF13AF3 /* Pods_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE2B1C4A11F7F3515E798683 /* Pods_Example.framework */; };
+		3BC7E8541F72699700FEB128 /* TextOnlyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC7E8521F72686E00FEB128 /* TextOnlyCell.swift */; };
 		A40D675D973B4E8E1D0BDD69 /* Pods_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68CAEB0FDEC9AE9876A22A0E /* Pods_Tests.framework */; };
 		F11D983A1B7F5E510014FF80 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F11D98381B7F5E510014FF80 /* Main.storyboard */; };
 		F13BBBF71B8B16080077571E /* OptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F13BBBF61B8B16080077571E /* OptionsTests.swift */; };
@@ -71,6 +72,7 @@
 
 /* Begin PBXFileReference section */
 		300FEFAC51A42695232B541F /* Pods-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.debug.xcconfig"; sourceTree = "<group>"; };
+		3BC7E8521F72686E00FEB128 /* TextOnlyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextOnlyCell.swift; path = Source/UI/TextOnlyCell.swift; sourceTree = "<group>"; };
 		47BB4B36EE37FF2EDFD5DAF1 /* Pods-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Example/Pods-Example.release.xcconfig"; sourceTree = "<group>"; };
 		68CAEB0FDEC9AE9876A22A0E /* Pods_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8867523DCD93CFD46218121E /* Pods-Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				F1635A861B86742B0031EBA3 /* OptionCell.swift */,
 				F1635A8C1B8674C60031EBA3 /* OptionButtonCell.swift */,
 				F1FBF7521BD658C700FCD4C3 /* TextFieldCell.swift */,
+				3BC7E8521F72686E00FEB128 /* TextOnlyCell.swift */,
 			);
 			name = UI;
 			sourceTree = "<group>";
@@ -526,6 +529,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3BC7E8541F72699700FEB128 /* TextOnlyCell.swift in Sources */,
 				F1635A991B86775C0031EBA3 /* SwiftySettingsViewController.swift in Sources */,
 				F1FBF7541BD65A4E00FCD4C3 /* TextFieldCell.swift in Sources */,
 				F14D84E91B88D2F000D9DDB7 /* UIColor+Default.swift in Sources */,
@@ -675,6 +679,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -715,6 +720,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};

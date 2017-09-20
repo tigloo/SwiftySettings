@@ -41,15 +41,21 @@ public protocol SettingsStorageType {
 // MARK: - Base
 
 open class TitledNode {
+
+    public typealias OnClicked = () -> Void
+
     open let title: String
     open let subTitle: String?
     open let icon: UIImage?
     open var storage: SettingsStorageType?
+    open var onClicked: OnClicked?
 
-    public init (title: String, subTitle: String? = nil, icon: UIImage? = nil) {
+    public init (title: String, subTitle: String? = nil,
+                 icon: UIImage? = nil, onClickedClosure: OnClicked? = nil) {
         self.title = title
         self.subTitle = subTitle
         self.icon = icon
+        self.onClicked = onClickedClosure
     }
 }
 
@@ -61,16 +67,27 @@ open class Item<T> : TitledNode
     open var value: T
 
     public typealias ValueChanged = (_ key: String, _ value: T) -> Void
+
     open var valueChanged: ValueChanged?
 
     public init (key: String, title: String, defaultValue: T, subTitle: String? = nil,
-                 icon: UIImage?, valueChangedClosure: ValueChanged?)
+                 icon: UIImage?, valueChangedClosure: ValueChanged?,
+                 onClickedClosure: OnClicked?)
     {
         self.key = key
         self.defaultValue = defaultValue
         self.value = defaultValue
         self.valueChanged = valueChangedClosure
-        super.init(title: title, subTitle: subTitle, icon: icon)
+        super.init(title: title, subTitle: subTitle, icon: icon, onClickedClosure: onClickedClosure)
+    }
+
+    public init (key: String, title: String, defaultValue: T, subTitle: String? = nil,
+                 icon: UIImage?, onClickedClosure: OnClicked?)
+    {
+        self.key = key
+        self.defaultValue = defaultValue
+        self.value = defaultValue
+        super.init(title: title, subTitle: subTitle, icon: icon, onClickedClosure: onClickedClosure)
     }
 }
 
@@ -209,9 +226,9 @@ open class Screen : TitledNode {
 open class Switch : Item<Bool> {
     public override init(key: String, title: String, defaultValue: Bool = false,
                          subTitle: String? = nil, icon: UIImage? = nil,
-                        valueChangedClosure: ValueChanged? = nil) {
+                        valueChangedClosure: ValueChanged? = nil, onClickedClosure: OnClicked? = nil) {
         super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: icon,
-                   valueChangedClosure: valueChangedClosure)
+                   valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)
     }
 
     open override var value: Bool {
@@ -221,6 +238,36 @@ open class Switch : Item<Bool> {
         set {
             storage?[key] = newValue
             valueChanged?(key, newValue)
+        }
+    }
+}
+
+open class TextOnly : Item<Bool> {
+
+    var clickable = false
+
+    private override init(key: String, title: String, defaultValue: Bool = false,
+                         subTitle: String? = nil, icon: UIImage? = nil,
+                         valueChangedClosure: ValueChanged? = nil, onClickedClosure: OnClicked? = nil) {
+        super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: icon,
+                   valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)
+    }
+
+    public convenience init(title: String, subTitle: String? = nil,
+                            icon: UIImage? = nil, onClickedClosure: OnClicked? = nil) {
+        self.init(key: "", title: title, defaultValue: false, subTitle: subTitle, icon: icon, valueChangedClosure: nil, onClickedClosure: onClickedClosure)
+
+        if onClickedClosure != nil {
+            self.clickable = true
+        }
+    }
+
+    open override var value: Bool {
+        get {
+            return defaultValue
+        }
+        set {
+
         }
     }
 }
@@ -244,11 +291,11 @@ open class Option : Item<Int> {
 
     public init(title: String, optionId: Int,
                 defaultValue: Int = 0, subTitle: String? = nil, icon: UIImage? = nil,
-                valueChangedClosure: ValueChanged? = nil) {
+                valueChangedClosure: ValueChanged? = nil, onClickedClosure: OnClicked? = nil) {
 
         self.optionId = optionId
         super.init(key: "", title: title, defaultValue: defaultValue, subTitle: subTitle, icon: icon,
-                   valueChangedClosure: valueChangedClosure)
+                   valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)
     }
 
     open override var value: Int {
@@ -277,7 +324,8 @@ open class Slider : Item<Float> {
                 minimumValue: Float = 0,
                 maximumValue: Float = 100,
                 snapToInts: Bool = false,
-                valueChangedClosure: ValueChanged? = nil)
+                valueChangedClosure: ValueChanged? = nil,
+                onClickedClosure: OnClicked? = nil)
     {
         self.minimumValue = minimumValue
         self.maximumValue = maximumValue
@@ -286,7 +334,7 @@ open class Slider : Item<Float> {
         self.snapToInts = snapToInts
 
         super.init(key: key, title: title, defaultValue: defaultValue, subTitle:  subTitle, icon: icon,
-                   valueChangedClosure: valueChangedClosure)
+                   valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)
     }
 
     open override var value: Float {
@@ -306,12 +354,12 @@ open class TextField : Item<String> {
 
     public init(key: String, title: String, secureTextEntry: Bool = false,
                 defaultValue: String = "", subTitle: String? = nil,
-                valueChangedClosure: ValueChanged? = nil)
+                valueChangedClosure: ValueChanged? = nil, onClickedClosure: OnClicked? = nil)
     {
         self.secureTextEntry = secureTextEntry
 
         super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: nil,
-                   valueChangedClosure: valueChangedClosure)
+                   valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)
     }
 
     open override var value: String {

@@ -111,18 +111,18 @@ class SliderCell : SettingsCell {
             // Value UILabel
 
             contentView.addConstraints(
-                [NSLayoutConstraint(item: valueLabel,
-                                    attribute: .leading,
+                [NSLayoutConstraint(item: contentView,
+                                    attribute: .trailing,
                                     relatedBy: .equal,
-                                    toItem: sliderView,
+                                    toItem: valueLabel,
                                     attribute: .trailing,
                                     multiplier: 1.0,
-                                    constant: 15 + ((self.imageView != nil) ? self.imageView!.frame.size.width : 0)),
+                                    constant: 10),
                  NSLayoutConstraint(item: valueLabel,
-                                    attribute: .centerY,
+                                    attribute: .bottom,
                                     relatedBy: .equal,
-                                    toItem: sliderView,
-                                    attribute: .centerY,
+                                    toItem: titleLabel,
+                                    attribute: .bottom,
                                     multiplier: 1.0,
                                     constant: 0)])
 

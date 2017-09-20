@@ -172,6 +172,11 @@ extension SwiftySettingsViewController {
             cell.appearance = appearance
             cell.load(item)
             return cell
+        case let item as TextOnly:
+            let cell = tableView.dequeueReusableCell(TextOnlyCell.self, type: .cell)
+            cell.appearance = appearance
+            cell.load(item)
+            return cell
         case let item as Slider:
             let cell = tableView.dequeueReusableCell(SliderCell.self, type: .cell)
             cell.appearance = appearance
@@ -240,6 +245,7 @@ extension SwiftySettingsViewController {
         case _ as Screen: fallthrough
         case _ as OptionsButton: fallthrough
         case _ as Option: return true
+        case let item as TextOnly: return item.clickable
         default: return false
         }
     }
@@ -259,9 +265,7 @@ extension SwiftySettingsViewController {
         switch (node) {
         case let item as Screen:
             let vc = SwiftySettingsViewController(appearance: self.appearance, screen: item)
-
             let nc = self.navigationController
-
             nc?.pushViewController(vc, animated: true)
         case let item as OptionsButton:
             let screen = Screen(title: item.title) {
@@ -281,10 +285,16 @@ extension SwiftySettingsViewController {
         default:
             break
         }
+
+        DispatchQueue.main.async {
+            node.onClicked?()
+        }
+
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     override open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
-                            forRowAt indexPath: IndexPath) {
+                                 forRowAt indexPath: IndexPath) {
 
         func decorateCellWithRoundCorners(_ cell: UITableViewCell,
                                           roundingCorners corners: UIRectCorner) {
@@ -395,6 +405,7 @@ private extension SwiftySettingsViewController {
         tableView.registerClass(SliderCell.self, type: .cell)
         tableView.registerClass(OptionCell.self, type: .cell)
         tableView.registerClass(OptionsButtonCell.self, type: .cell)
+        tableView.registerClass(TextOnlyCell.self, type: .cell)
         tableView.registerClass(SettingsCell.self, type: .cell)
         tableView.registerClass(TextFieldCell.self, type: .cell)
         tableView.registerClass(SectionHeaderFooter.self, type: .header)
