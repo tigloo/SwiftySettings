@@ -28,7 +28,7 @@
 import Foundation
 import UIKit
 
-class SettingsViewController : UITableViewController {
+open class SwiftySettingsViewController : UITableViewController {
 
     @IBInspectable open var viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
     @IBInspectable open var cellBackgroundColor: UIColor? = UIColor.white
@@ -39,7 +39,7 @@ class SettingsViewController : UITableViewController {
     @IBInspectable open var selectionColor: UIColor? = UIColor.lightGray
     @IBInspectable open var forceRoundedCorners: Bool = false
 
-    struct Appearance {
+    public struct Appearance {
         let viewBackgroundColor: UIColor?
         let cellBackgroundColor: UIColor?
         let cellTextColor: UIColor?
@@ -67,7 +67,7 @@ class SettingsViewController : UITableViewController {
             self.forceRoundedCorners = forceRoundedCorners
         }
 
-        init(splitVC: SettingsViewController) {
+        init(splitVC: SwiftySettingsViewController) {
             self.viewBackgroundColor = splitVC.viewBackgroundColor
             self.cellBackgroundColor = splitVC.cellBackgroundColor
             self.cellTextColor = splitVC.cellTextColor
@@ -82,13 +82,17 @@ class SettingsViewController : UITableViewController {
     open var settings: SwiftySettings! {
         didSet{
             self.load(settings.main)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
     }
 
-    var sections: [Section] = []
-    var appearance: Appearance
-    var observerTokens: [NSObjectProtocol] = []
-    var editingIndexPath: IndexPath? = nil
+    fileprivate var sections: [Section] = []
+    fileprivate var appearance: Appearance
+    fileprivate var storedContentInset = UIEdgeInsets.zero
+    fileprivate var observerTokens: [NSObjectProtocol] = []
+    fileprivate var editingIndexPath: IndexPath? = nil
 
     var shouldDecorateWithRoundCorners: Bool {
         if self.forceRoundedCorners {
@@ -102,9 +106,10 @@ class SettingsViewController : UITableViewController {
         self.settings = settings
     }
 
-    public convenience init (appearance: Appearance) {
+    public convenience init (appearance: Appearance, screen: Screen) {
         self.init(nibName: nil, bundle: nil)
         self.appearance = appearance
+        self.load(screen)
     }
 
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -123,35 +128,42 @@ class SettingsViewController : UITableViewController {
         observerTokens.removeAll()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    public required init?(coder aDecoder: NSCoder) {
+        self.appearance = Appearance(viewBackgroundColor: self.viewBackgroundColor,
+                                     cellBackgroundColor: self.cellBackgroundColor,
+                                     cellTextColor: self.cellTextColor,
+                                     cellSecondaryTextColor: self.cellSecondaryTextColor,
+                                     tintColor: self.tintColor,
+                                     separatorColor: self.separatorColor,
+                                     selectionColor: self.selectionColor,
+                                     forceRoundedCorners: self.forceRoundedCorners)
+        super.init(coder: aDecoder)
     }
 
-    override func viewDidLoad() {
+    override open func viewDidLoad() {
         super.viewDidLoad()
         setupTableView()
         setupKeyboardHandling()
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        tableView.reloadData()
+    override open func viewWillAppear(_ animated: Bool) {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 
     func load(_ screen: Screen) {
         self.sections = screen.sections
-        DispatchQueue.main.async { [unowned self] in
-            self.title = screen.title
-            self.tableView.reloadData()
-        }
+        self.title = screen.title
     }
 }
 
 
 // MARK: - UITableViewDataSource
 
-extension SettingsViewController {
+extension SwiftySettingsViewController {
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let node = sections[indexPath.section].items[indexPath.row]
 
         switch (node) {
@@ -191,22 +203,22 @@ extension SettingsViewController {
         }
     }
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
+    override open func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sections[section].items.count
     }
 
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .header)
         header.appearance = appearance
         header.load(sections[section].title)
         return header
     }
 
-    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         if let footerText = sections[section].footer {
             let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
             footer.appearance = appearance
@@ -219,9 +231,9 @@ extension SettingsViewController {
 
 //MARK: - UITableViewDelegate
 
-extension SettingsViewController {
+extension SwiftySettingsViewController {
 
-    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
+    override open func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         let node = sections[indexPath.section].items[indexPath.row]
 
         switch(node) {
@@ -232,29 +244,30 @@ extension SettingsViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 22
     }
 
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    override open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 22
     }
 
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let node = sections[indexPath.section].items[indexPath.row]
 
         switch (node) {
         case let item as Screen:
-            let vc = SettingsViewController(appearance: self.appearance)
-            vc.load(item)
-            self.navigationController?.pushViewController(vc, animated: true)
+            let vc = SwiftySettingsViewController(appearance: self.appearance, screen: item)
+
+            let nc = self.navigationController
+
+            nc?.pushViewController(vc, animated: true)
         case let item as OptionsButton:
-            let vc = SettingsViewController(appearance: self.appearance)
             let screen = Screen(title: item.title) {
                 [Section(title: "") { item.options }]
             }
-            vc.load(screen)
+            let vc = SwiftySettingsViewController(appearance: self.appearance, screen: screen)
             self.navigationController?.popToRootViewController(animated: false)
             self.navigationController?.pushViewController(vc, animated: true)
         case let item as Option:
@@ -270,7 +283,7 @@ extension SettingsViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
+    override open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                             forRowAt indexPath: IndexPath) {
 
         func decorateCellWithRoundCorners(_ cell: UITableViewCell,
@@ -305,7 +318,7 @@ extension SettingsViewController {
 
 // MARK: Keyboard handling
 
-extension SettingsViewController : UITextFieldDelegate {
+extension SwiftySettingsViewController : UITextFieldDelegate {
 
     func setupKeyboardHandling() {
 
@@ -313,6 +326,8 @@ extension SettingsViewController : UITextFieldDelegate {
 
         observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil,
                                              queue: OperationQueue.main) { [weak self] note in
+
+                                                guard self != nil else { return }
 
                                                 guard let userInfo = note.userInfo as? [String: AnyObject],
                                                     let keyboardRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
@@ -325,28 +340,33 @@ extension SettingsViewController : UITextFieldDelegate {
                                                 if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
                                                     contentInsets = UIEdgeInsetsMake(0.0, 0.0, (keyboardRect.size.height), 0.0);
                                                 }
-                                                self?.tableView.contentInset = contentInsets;
-                                                self?.tableView.scrollIndicatorInsets = contentInsets;
 
-                                                if let scrollToIndexPath = self?.editingIndexPath {
-                                                    self?.tableView.scrollToRow(at: scrollToIndexPath,
+                                                self!.storedContentInset = self!.tableView.contentInset
+
+                                                self!.tableView.contentInset = contentInsets;
+                                                self!.tableView.scrollIndicatorInsets = contentInsets;
+
+                                                if let scrollToIndexPath = self!.editingIndexPath {
+                                                    self!.tableView.scrollToRow(at: scrollToIndexPath,
                                                                                 at: .middle,
                                                                                 animated:false)
                                                 }
         })
         observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil,
                                              queue: OperationQueue.main) { [weak self] note in
-                                                self?.tableView.contentInset = UIEdgeInsets.zero;
-                                                self?.tableView.scrollIndicatorInsets = UIEdgeInsets.zero;
+                                                guard self != nil else { return }
+
+                                                self!.tableView.contentInset = self!.storedContentInset;
+                                                self!.tableView.scrollIndicatorInsets = self!.storedContentInset;
         })
     }
 
-    func textFieldDidBeginEditing(_ textField: UITextField) {
+    public func textFieldDidBeginEditing(_ textField: UITextField) {
         let point = self.tableView.convert(textField.bounds.origin, from:textField)
         self.editingIndexPath = self.tableView.indexPathForRow(at: point)
     }
 
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
@@ -356,7 +376,7 @@ extension SettingsViewController : UITextFieldDelegate {
 
 //MARK: Private
 
-private extension SettingsViewController {
+private extension SwiftySettingsViewController {
     
     func setupTableView() {
         

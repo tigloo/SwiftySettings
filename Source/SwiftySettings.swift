@@ -266,6 +266,7 @@ open class Slider : Item<Float> {
     var maximumValueImage: UIImage?
     var minimumValue: Float
     var maximumValue: Float
+    var snapToInts: Bool
 
     public init(key: String, title: String, defaultValue: Float = 0,
                 icon: UIImage? = nil,
@@ -273,12 +274,14 @@ open class Slider : Item<Float> {
                 maximumValueImage: UIImage? = nil,
                 minimumValue: Float = 0,
                 maximumValue: Float = 100,
+                snapToInts: Bool = false,
                 valueChangedClosure: ValueChanged? = nil)
     {
         self.minimumValue = minimumValue
         self.maximumValue = maximumValue
         self.minimumValueImage = minimumValueImage
         self.maximumValueImage = maximumValueImage
+        self.snapToInts = snapToInts
 
         super.init(key: key, title: title, defaultValue: defaultValue, icon: icon,
                    valueChangedClosure: valueChangedClosure)

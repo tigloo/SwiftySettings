@@ -30,7 +30,7 @@ import UIKit
 
 class SectionHeaderFooter : UITableViewHeaderFooterView {
 
-    var appearance: SettingsViewController.Appearance?
+    var appearance: SwiftySettingsViewController.Appearance?
     let titleLabel = UILabel()
     let spacing: CGFloat = 10
 

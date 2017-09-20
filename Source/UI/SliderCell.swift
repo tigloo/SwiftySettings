@@ -164,16 +164,27 @@ class SliderCell : SettingsCell {
         self.sliderView.maximumValue = item.maximumValue
         self.sliderView.minimumValueImage = item.minimumValueImage
         self.sliderView.maximumValueImage = item.maximumValueImage
-        self.sliderView.setValue(item.value, animated: false)
+
+        self.sliderView.setValue((self.item.snapToInts) ? Float(lroundf(self.item.value)) : item.value, animated: false)
 
         self.configureAppearance()
         self.setNeedsUpdateConstraints()
     }
 
     func sliderChanged(_ sender: AnyObject) {
-        item.value = sliderView.value
+        let value = (self.item.snapToInts) ? Float(lroundf(sliderView.value)) : sliderView.value
+
+        guard value != self.item.value else {
+            DispatchQueue.main.async {
+                self.sliderView.setValue(value, animated: false)
+            }
+            return
+        }
+
+        self.item.value = value
         DispatchQueue.main.async {
             self.valueLabel.text = String(Int(self.item.value))
+            self.sliderView.setValue(value, animated: true)
         }
     }
 }

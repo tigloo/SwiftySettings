@@ -99,7 +99,8 @@ class ExampleSettingsController: SwiftySettingsViewController {
                                 minimumValueImage: UIImage(named: "slider-darker"),
                                 maximumValueImage: UIImage(named: "slider-brighter"),
                                 minimumValue: 0,
-                                maximumValue: 100)]
+                                maximumValue: 7,
+                                snapToInts: true)]
                     }]
                 },
                 Screen(title: "Bedroom") {

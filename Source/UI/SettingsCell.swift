@@ -33,7 +33,7 @@ class SettingsCell : UITableViewCell {
     let spacing: CGFloat = 10
     let height: CGFloat = 44
     var inset: CGFloat = 0
-    var appearance: SettingsViewController.Appearance?
+    var appearance: SwiftySettingsViewController.Appearance?
     var leftTitleConstraint: NSLayoutConstraint!
     var didSetupConstraints = false
 

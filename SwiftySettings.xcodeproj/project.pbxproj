@@ -22,7 +22,7 @@
 		F1635A911B8674F80031EBA3 /* OptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1635A861B86742B0031EBA3 /* OptionCell.swift */; };
 		F1635A921B8674F80031EBA3 /* SectionHeaderFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1635A8A1B8674930031EBA3 /* SectionHeaderFooter.swift */; };
 		F1635A981B86775C0031EBA3 /* UITableView+ReuseIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1635A941B8677020031EBA3 /* UITableView+ReuseIdentifier.swift */; };
-		F1635A991B86775C0031EBA3 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1635A961B86770D0031EBA3 /* SettingsViewController.swift */; };
+		F1635A991B86775C0031EBA3 /* SwiftySettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1635A961B86770D0031EBA3 /* SwiftySettingsViewController.swift */; };
 		F1786DF41B8E55CD00FDE3CD /* SliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1786DF31B8E55CD00FDE3CD /* SliderTests.swift */; };
 		F1786DF61B8E568000FDE3CD /* SwitchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1786DF51B8E568000FDE3CD /* SwitchTests.swift */; };
 		F1786DF81B8E57CB00FDE3CD /* SharedBehaviors.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1786DF71B8E57CB00FDE3CD /* SharedBehaviors.swift */; };
@@ -91,7 +91,7 @@
 		F1635A8A1B8674930031EBA3 /* SectionHeaderFooter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SectionHeaderFooter.swift; path = Source/UI/SectionHeaderFooter.swift; sourceTree = "<group>"; };
 		F1635A8C1B8674C60031EBA3 /* OptionButtonCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptionButtonCell.swift; path = Source/UI/OptionButtonCell.swift; sourceTree = "<group>"; };
 		F1635A941B8677020031EBA3 /* UITableView+ReuseIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UITableView+ReuseIdentifier.swift"; path = "Source/Extensions/UITableView+ReuseIdentifier.swift"; sourceTree = "<group>"; };
-		F1635A961B86770D0031EBA3 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SettingsViewController.swift; path = Source/UI/SettingsViewController.swift; sourceTree = "<group>"; };
+		F1635A961B86770D0031EBA3 /* SwiftySettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftySettingsViewController.swift; path = Source/UI/SwiftySettingsViewController.swift; sourceTree = "<group>"; };
 		F1786DF31B8E55CD00FDE3CD /* SliderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderTests.swift; sourceTree = "<group>"; };
 		F1786DF51B8E568000FDE3CD /* SwitchTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTests.swift; sourceTree = "<group>"; };
 		F1786DF71B8E57CB00FDE3CD /* SharedBehaviors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedBehaviors.swift; sourceTree = "<group>"; };
@@ -178,7 +178,6 @@
 		F1635A7E1B8672E80031EBA3 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				F1635A961B86770D0031EBA3 /* SettingsViewController.swift */,
 				F1635A8A1B8674930031EBA3 /* SectionHeaderFooter.swift */,
 				F1635A7F1B8673050031EBA3 /* SettingsCell.swift */,
 				F1635A821B86737B0031EBA3 /* SwitchCell.swift */,
@@ -227,6 +226,7 @@
 				F1635A931B8676F40031EBA3 /* Extensions */,
 				F1635A7E1B8672E80031EBA3 /* UI */,
 				F1E045751B78F71200819DCD /* Info.plist */,
+				F1635A961B86770D0031EBA3 /* SwiftySettingsViewController.swift */,
 				F18627441B74D36B004E5529 /* SwiftySettings.swift */,
 			);
 			name = Source;
@@ -422,9 +422,12 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Example/Pods-Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/SwiftyUserDefaults/SwiftyUserDefaults.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyUserDefaults.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -437,13 +440,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Tests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9A7EFCE2D2D67ECB1AE4A415 /* [CP] Check Pods Manifest.lock */ = {
@@ -452,13 +458,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Example-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		AA05607484E21BEC1AC0609B /* [CP] Copy Pods Resources */ = {
@@ -482,9 +491,14 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Tests/Pods-Tests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -512,10 +526,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1635A991B86775C0031EBA3 /* SwiftySettingsViewController.swift in Sources */,
 				F1FBF7541BD65A4E00FCD4C3 /* TextFieldCell.swift in Sources */,
 				F14D84E91B88D2F000D9DDB7 /* UIColor+Default.swift in Sources */,
 				F1635A981B86775C0031EBA3 /* UITableView+ReuseIdentifier.swift in Sources */,
-				F1635A991B86775C0031EBA3 /* SettingsViewController.swift in Sources */,
 				F1635A8E1B8674F80031EBA3 /* OptionButtonCell.swift in Sources */,
 				F1635A8F1B8674F80031EBA3 /* SwitchCell.swift in Sources */,
 				F1635A901B8674F80031EBA3 /* SliderCell.swift in Sources */,
