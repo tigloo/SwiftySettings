@@ -174,7 +174,7 @@ class SliderCell : SettingsCell {
         self.setNeedsUpdateConstraints()
     }
 
-    func sliderChanged(_ sender: AnyObject) {
+    @objc func sliderChanged(_ sender: AnyObject) {
         let value = (self.item.snapToInts) ? Float(lroundf(sliderView.value)) : sliderView.value
 
         guard value != self.item.value else {

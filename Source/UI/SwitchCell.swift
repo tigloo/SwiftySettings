@@ -103,7 +103,7 @@ class SwitchCell : SettingsCell {
         setNeedsUpdateConstraints()
     }
 
-    func switchChanged(_ sender: AnyObject) {
+    @objc func switchChanged(_ sender: AnyObject) {
         item.value = switchView.isOn
     }
 }

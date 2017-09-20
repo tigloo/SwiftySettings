@@ -148,7 +148,11 @@ class SettingsCell : UITableViewCell {
                 multiplier: 1.0,
                 constant: height)
 
-            heightConstraint.priority = 999
+            #if swift(>=4.0)
+                heightConstraint.priority = UILayoutPriority(rawValue: 999)
+            #elseif swift(>=2.0)
+                heightConstraint.priority = 999
+            #endif
             contentView.addConstraint(heightConstraint)
 
             didSetupConstraints = true
