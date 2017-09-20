@@ -30,22 +30,16 @@ import UIKit
 
 class OptionCell : SettingsCell {
 
-    override func configureAppearance() {
-        super.configureAppearance()
-        textLabel?.textColor = appearance?.cellTextColor
-        backgroundColor = appearance?.cellBackgroundColor
-        accessoryView?.backgroundColor = appearance?.cellBackgroundColor
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
 
     func load(_ item: Option) {
-
-        configureAppearance()
-
-        textLabel?.text = item.title
+        super.load(item)
         accessoryType = item.selected ? .checkmark : .none;
-
-        if let image = item.icon {
-            self.imageView?.image = image
-        }
     }
 }

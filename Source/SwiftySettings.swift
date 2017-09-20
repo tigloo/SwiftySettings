@@ -42,11 +42,13 @@ public protocol SettingsStorageType {
 
 open class TitledNode {
     open let title: String
+    open let subTitle: String?
     open let icon: UIImage?
     open var storage: SettingsStorageType?
 
-    public init (title: String, icon: UIImage? = nil) {
+    public init (title: String, subTitle: String? = nil, icon: UIImage? = nil) {
         self.title = title
+        self.subTitle = subTitle
         self.icon = icon
     }
 }
@@ -61,14 +63,14 @@ open class Item<T> : TitledNode
     public typealias ValueChanged = (_ key: String, _ value: T) -> Void
     open var valueChanged: ValueChanged?
 
-    public init (key: String, title: String, defaultValue: T, icon: UIImage?,
-                 valueChangedClosure: ValueChanged?)
+    public init (key: String, title: String, defaultValue: T, subTitle: String? = nil,
+                 icon: UIImage?, valueChangedClosure: ValueChanged?)
     {
         self.key = key
         self.defaultValue = defaultValue
         self.value = defaultValue
         self.valueChanged = valueChangedClosure
-        super.init(title: title, icon: icon)
+        super.init(title: title, subTitle: subTitle, icon: icon)
     }
 }
 
@@ -117,7 +119,7 @@ open class OptionsSection : Section, OptionsContainerType {
 
     let key: String
 
-    public init(key: String, title: String,
+    public init(key: String, title: String, subTitle: String? = nil,
                 nodesClosure: (() -> [Option])? = nil) {
         self.key = key
         super.init(title: title)
@@ -151,11 +153,11 @@ open class OptionsButton : TitledNode, OptionsContainerType {
         }
     }
 
-    public init(key: String, title: String, icon: UIImage? = nil,
-                optionsClosure: (() -> [Option])? = nil) {
+    public init(key: String, title: String, subTitle: String? = nil,
+                icon: UIImage? = nil, optionsClosure: (() -> [Option])? = nil) {
 
         self.key = key
-        super.init(title: title, icon: icon)
+        super.init(title: title, subTitle: subTitle, icon: icon)
 
         if let closure = optionsClosure {
             options = closure()
@@ -183,8 +185,8 @@ open class OptionsButton : TitledNode, OptionsContainerType {
 open class Screen : TitledNode {
     open var sections: [Section] = []
 
-    public init(title: String, icon: UIImage? = nil, sectionsClosure: (() -> [Section])? = nil) {
-        super.init(title: title, icon: icon)
+    public init(title: String, subTitle: String? = nil, icon: UIImage? = nil, sectionsClosure: (() -> [Section])? = nil) {
+        super.init(title: title, subTitle: subTitle, icon: icon)
 
         if let closure = sectionsClosure {
             sections = closure()
@@ -206,9 +208,9 @@ open class Screen : TitledNode {
 
 open class Switch : Item<Bool> {
     public override init(key: String, title: String, defaultValue: Bool = false,
-                        icon: UIImage? = nil,
+                         subTitle: String? = nil, icon: UIImage? = nil,
                         valueChangedClosure: ValueChanged? = nil) {
-        super.init(key: key, title: title, defaultValue: defaultValue, icon: icon,
+        super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: icon,
                    valueChangedClosure: valueChangedClosure)
     }
 
@@ -241,11 +243,11 @@ open class Option : Item<Int> {
     }
 
     public init(title: String, optionId: Int,
-                defaultValue: Int = 0, icon: UIImage? = nil,
+                defaultValue: Int = 0, subTitle: String? = nil, icon: UIImage? = nil,
                 valueChangedClosure: ValueChanged? = nil) {
 
         self.optionId = optionId
-        super.init(key: "", title: title, defaultValue: defaultValue, icon: icon,
+        super.init(key: "", title: title, defaultValue: defaultValue, subTitle: subTitle, icon: icon,
                    valueChangedClosure: valueChangedClosure)
     }
 
@@ -269,7 +271,7 @@ open class Slider : Item<Float> {
     var snapToInts: Bool
 
     public init(key: String, title: String, defaultValue: Float = 0,
-                icon: UIImage? = nil,
+                subTitle: String? = nil, icon: UIImage? = nil,
                 minimumValueImage: UIImage? = nil,
                 maximumValueImage: UIImage? = nil,
                 minimumValue: Float = 0,
@@ -283,7 +285,7 @@ open class Slider : Item<Float> {
         self.maximumValueImage = maximumValueImage
         self.snapToInts = snapToInts
 
-        super.init(key: key, title: title, defaultValue: defaultValue, icon: icon,
+        super.init(key: key, title: title, defaultValue: defaultValue, subTitle:  subTitle, icon: icon,
                    valueChangedClosure: valueChangedClosure)
     }
 
@@ -303,12 +305,12 @@ open class TextField : Item<String> {
     let secureTextEntry: Bool
 
     public init(key: String, title: String, secureTextEntry: Bool = false,
-                defaultValue: String = "",
+                defaultValue: String = "", subTitle: String? = nil,
                 valueChangedClosure: ValueChanged? = nil)
     {
         self.secureTextEntry = secureTextEntry
 
-        super.init(key: key, title: title, defaultValue: defaultValue, icon: nil,
+        super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: nil,
                    valueChangedClosure: valueChangedClosure)
     }
 

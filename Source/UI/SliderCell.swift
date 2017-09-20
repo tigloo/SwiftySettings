@@ -36,7 +36,7 @@ class SliderCell : SettingsCell {
     let sliderView = UISlider()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
@@ -111,18 +111,18 @@ class SliderCell : SettingsCell {
             // Value UILabel
 
             contentView.addConstraints(
-                [NSLayoutConstraint(item: contentView,
-                                    attribute: .trailing,
+                [NSLayoutConstraint(item: valueLabel,
+                                    attribute: .leading,
                                     relatedBy: .equal,
-                                    toItem: valueLabel,
+                                    toItem: sliderView,
                                     attribute: .trailing,
                                     multiplier: 1.0,
-                                    constant: 5),
+                                    constant: 15 + ((self.imageView != nil) ? self.imageView!.frame.size.width : 0)),
                  NSLayoutConstraint(item: valueLabel,
-                                    attribute: .lastBaseline,
+                                    attribute: .centerY,
                                     relatedBy: .equal,
-                                    toItem: titleLabel,
-                                    attribute: .lastBaseline,
+                                    toItem: sliderView,
+                                    attribute: .centerY,
                                     multiplier: 1.0,
                                     constant: 0)])
 
@@ -139,7 +139,9 @@ class SliderCell : SettingsCell {
         contentView.addSubview(valueLabel)
 
         textLabel?.removeFromSuperview()
+        textLabel?.isHidden = true
         imageView?.removeFromSuperview()
+        imageView?.isHidden = true
 
         sliderView.addTarget(self, action: #selector(SliderCell.sliderChanged(_:)),
                              for: .valueChanged)
@@ -154,6 +156,7 @@ class SliderCell : SettingsCell {
     }
 
     func load(_ item: Slider) {
+        super.load(item)
         self.item = item
 
         if !item.title.isEmpty {

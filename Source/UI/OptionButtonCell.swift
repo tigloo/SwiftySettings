@@ -33,7 +33,7 @@ class OptionsButtonCell : SettingsCell {
     let selectedOptionLabel = UILabel()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
@@ -91,20 +91,18 @@ class OptionsButtonCell : SettingsCell {
 
     override func configureAppearance() {
         super.configureAppearance()
-        textLabel?.textColor = appearance?.cellTextColor
         selectedOptionLabel.textColor = appearance?.cellSecondaryTextColor
-        contentView.backgroundColor = appearance?.cellBackgroundColor
-        accessoryView?.backgroundColor = appearance?.cellBackgroundColor
     }
 
     func load(_ item: OptionsButton) {
-        self.textLabel?.text = item.title
+        super.load(item)
         self.selectedOptionLabel.text = item.selectedOptionTitle
         self.accessoryType = .disclosureIndicator
 
         if let image = item.icon {
             self.imageView?.image = image
         }
+
         configureAppearance()
         setNeedsUpdateConstraints()
     }

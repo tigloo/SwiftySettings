@@ -35,6 +35,9 @@ class SettingsCell : UITableViewCell {
     var inset: CGFloat = 0
     var appearance: SwiftySettingsViewController.Appearance?
     var leftTitleConstraint: NSLayoutConstraint!
+    var leftTitleVerticalConstraint: NSLayoutConstraint!
+    var leftSubTitleConstraint: NSLayoutConstraint?
+    var leftSubTitleVerticalConstraint: NSLayoutConstraint?
     var didSetupConstraints = false
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -58,6 +61,11 @@ class SettingsCell : UITableViewCell {
         else {
             super.updateConstraints()
             return
+        }
+
+        var shouldRecalculateForDetail = false
+        if let _ = detailTextLabel, detailTextLabel?.superview != nil, detailTextLabel?.text != nil {
+            shouldRecalculateForDetail = true
         }
 
         if !didSetupConstraints {
@@ -95,16 +103,42 @@ class SettingsCell : UITableViewCell {
                 constant: spacing)
 
             // Title UILabel - Vertical Constraint
-            contentView.addConstraints(
-                [NSLayoutConstraint(item: titleLabel,
-                                    attribute: .centerY,
-                                    relatedBy: .equal,
-                                    toItem: contentView,
-                                    attribute: .centerY,
-                                    multiplier: 1.0,
-                                    constant: 0),
-                    leftTitleConstraint
-                ])
+            leftTitleVerticalConstraint = NSLayoutConstraint(item: titleLabel,
+                                                             attribute: .centerY,
+                                                             relatedBy: .equal,
+                                                             toItem: contentView,
+                                                             attribute: .centerY,
+                                                             multiplier: 1.0,
+                                                             constant: 0)
+
+            contentView.addConstraints([leftTitleVerticalConstraint, leftTitleConstraint])
+
+            // Check if we need a detail label as well
+            if let subTitleLabel = detailTextLabel, detailTextLabel?.superview != nil {
+                subTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+                let subTitleFontHeight = titleLabel.font.lineHeight
+
+                // Sub-Title UILabel - Horizontal Constraint
+                leftSubTitleConstraint = NSLayoutConstraint(item: subTitleLabel,
+                                                            attribute: .leading,
+                                                            relatedBy: .equal,
+                                                            toItem: contentView,
+                                                            attribute: .leading,
+                                                            multiplier: 1.0,
+                                                            constant: spacing)
+
+
+                // Sub-Title UILabel - Vertical Constraint
+                leftSubTitleVerticalConstraint = NSLayoutConstraint(item: subTitleLabel,
+                                                                     attribute: .centerY,
+                                                                     relatedBy: .equal,
+                                                                     toItem: contentView,
+                                                                     attribute: .centerY,
+                                                                     multiplier: 1.0,
+                                                                     constant: subTitleFontHeight / 2)
+                contentView.addConstraints([leftSubTitleVerticalConstraint!, leftSubTitleConstraint!])
+            }
 
             let heightConstraint = NSLayoutConstraint(item: contentView,
                 attribute: .height,
@@ -117,11 +151,13 @@ class SettingsCell : UITableViewCell {
             heightConstraint.priority = 999
             contentView.addConstraint(heightConstraint)
 
-
             didSetupConstraints = true
         }
 
+        let titleFontHeight = titleLabel.font.lineHeight
+        leftTitleVerticalConstraint.constant = (shouldRecalculateForDetail) ? -(titleFontHeight/2) : 0
         leftTitleConstraint.constant = iconView.frame.width + spacing
+        leftSubTitleConstraint?.constant = iconView.frame.width + spacing
 
         super.updateConstraints()
     }
@@ -148,18 +184,24 @@ class SettingsCell : UITableViewCell {
 
         textLabel?.text = item.title
 
+        if item.subTitle != nil {
+            detailTextLabel?.text = item.subTitle
+        }
+
         if (item as? Screen != nil) {
             accessoryType = .disclosureIndicator;
         }
+
         if let image = item.icon {
             imageView?.image = image
         }
+
         setNeedsUpdateConstraints()
     }
 
     func configureAppearance() {
-
         textLabel?.textColor = appearance?.cellTextColor
+        detailTextLabel?.textColor = appearance?.cellTextColor
         contentView.backgroundColor = appearance?.cellBackgroundColor
         backgroundColor = appearance?.cellBackgroundColor
         selectedBackgroundView = UIView()

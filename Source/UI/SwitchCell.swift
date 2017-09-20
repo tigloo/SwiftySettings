@@ -34,7 +34,7 @@ class SwitchCell : SettingsCell {
     let switchView = UISwitch()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
 
@@ -79,12 +79,9 @@ class SwitchCell : SettingsCell {
 
 
     override func setupViews() {
-
         super.setupViews()
 
         contentView.addSubview(switchView)
-
-        configureAppearance()
 
         switchView.addTarget(self, action: #selector(SwitchCell.switchChanged(_:)), for: .valueChanged)
     }
@@ -101,6 +98,8 @@ class SwitchCell : SettingsCell {
         DispatchQueue.main.async(execute: {
             self.switchView.setOn(item.value as Bool, animated: false)
         })
+        
+        configureAppearance()
         setNeedsUpdateConstraints()
     }
 

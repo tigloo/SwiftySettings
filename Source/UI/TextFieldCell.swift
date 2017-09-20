@@ -119,7 +119,9 @@ class TextFieldCell : SettingsCell {
         contentView.addSubview(titleLabel)
 
         textLabel?.removeFromSuperview()
+        textLabel?.isHidden = true
         imageView?.removeFromSuperview()
+        imageView?.isHidden = true
 
         textField.addTarget(self, action: #selector(TextFieldCell.textInputChanged(_:)),
                             for: .editingChanged)
@@ -134,6 +136,8 @@ class TextFieldCell : SettingsCell {
     }
 
     func load(_ item: TextField) {
+        super.load(item)
+
         self.item = item
 
         self.titleLabel.text = item.title

@@ -85,12 +85,12 @@ class ExampleSettingsController: SwiftySettingsViewController {
         /* Top Down settings */
         settings = SwiftySettings(storage: storage, title: "Intelligent Home") {
             [Section(title: "Electricity") {
-                [OptionsButton(key: "tariff", title: "Tariff") {
-                    [Option(title: "Day", optionId: 1),
+                [OptionsButton(key: "tariff", title: "Tariff", subTitle: "Select a tariff") {
+                    [Option(title: "Day", optionId: 1, subTitle: "A Day setting"),
                      Option(title: "Night", optionId: 2),
                      Option(title: "Mixed", optionId: 3)]
                     },
-                Switch(key: "light-central", title: "Central Switch", icon: UIImage(named: "settings-light")),
+                Switch(key: "light-central", title: "Central Switch", subTitle: "Toggles all lights", icon: UIImage(named: "settings-light")),
                 Screen(title: "Livingroom") {
                     [Section(title: "Lights") {
                         [Switch(key: "light1", title: "Light 1"),
