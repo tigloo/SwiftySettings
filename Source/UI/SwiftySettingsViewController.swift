@@ -48,7 +48,7 @@ open class SwiftySettingsViewController : UITableViewController {
         let separatorColor: UIColor?
         let selectionColor: UIColor?
         let forceRoundedCorners: Bool
-        let statusBarStyle: UIStatusBarStyle
+        var statusBarStyle: UIStatusBarStyle
 
         init(viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
              cellBackgroundColor: UIColor? = UIColor.white,
@@ -83,7 +83,12 @@ open class SwiftySettingsViewController : UITableViewController {
         }
     }
 
-    open var statusBarStyle: UIStatusBarStyle = .default
+    open var statusBarStyle: UIStatusBarStyle = .default {
+        didSet {
+            self.appearance.statusBarStyle = statusBarStyle
+            self.setNeedsStatusBarAppearanceUpdate()
+        }
+    }
 
     open var settings: SwiftySettings! {
         didSet{
