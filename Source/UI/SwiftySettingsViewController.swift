@@ -38,6 +38,7 @@ open class SwiftySettingsViewController : UITableViewController {
     @IBInspectable open var separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
     @IBInspectable open var selectionColor: UIColor? = UIColor.lightGray
     @IBInspectable open var forceRoundedCorners: Bool = false
+    @IBInspectable open var statusBarStyle: UIStatusBarStyle = .default
 
     public struct Appearance {
         let viewBackgroundColor: UIColor?
@@ -48,6 +49,7 @@ open class SwiftySettingsViewController : UITableViewController {
         let separatorColor: UIColor?
         let selectionColor: UIColor?
         let forceRoundedCorners: Bool
+        let statusBarStyle: UIStatusBarStyle
 
         init(viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
              cellBackgroundColor: UIColor? = UIColor.white,
@@ -56,7 +58,8 @@ open class SwiftySettingsViewController : UITableViewController {
              tintColor: UIColor? = nil,
              separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
              selectionColor: UIColor? = UIColor.lightGray,
-             forceRoundedCorners: Bool = false) {
+             forceRoundedCorners: Bool = false,
+             statusBarStyle: UIStatusBarStyle = .default) {
             self.viewBackgroundColor = viewBackgroundColor
             self.cellBackgroundColor = cellBackgroundColor
             self.cellTextColor = cellTextColor
@@ -65,6 +68,7 @@ open class SwiftySettingsViewController : UITableViewController {
             self.separatorColor = separatorColor
             self.selectionColor = selectionColor
             self.forceRoundedCorners = forceRoundedCorners
+            self.statusBarStyle = statusBarStyle
         }
 
         init(splitVC: SwiftySettingsViewController) {
@@ -76,6 +80,7 @@ open class SwiftySettingsViewController : UITableViewController {
             self.separatorColor = splitVC.separatorColor
             self.selectionColor = splitVC.selectionColor
             self.forceRoundedCorners = splitVC.forceRoundedCorners
+            self.statusBarStyle = splitVC.statusBarStyle
         }
     }
 
@@ -101,6 +106,10 @@ open class SwiftySettingsViewController : UITableViewController {
         return false
     }
 
+    override open var preferredStatusBarStyle: UIStatusBarStyle {
+        return self.appearance.statusBarStyle
+    }
+
     public convenience init(settings: SwiftySettings) {
         self.init(nibName: nil, bundle: nil)
         self.settings = settings
@@ -120,7 +129,8 @@ open class SwiftySettingsViewController : UITableViewController {
                                      tintColor: self.tintColor,
                                      separatorColor: self.separatorColor,
                                      selectionColor: self.selectionColor,
-                                     forceRoundedCorners: self.forceRoundedCorners)
+                                     forceRoundedCorners: self.forceRoundedCorners,
+                                     statusBarStyle: self.statusBarStyle)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
@@ -136,7 +146,8 @@ open class SwiftySettingsViewController : UITableViewController {
                                      tintColor: self.tintColor,
                                      separatorColor: self.separatorColor,
                                      selectionColor: self.selectionColor,
-                                     forceRoundedCorners: self.forceRoundedCorners)
+                                     forceRoundedCorners: self.forceRoundedCorners,
+                                     statusBarStyle: self.statusBarStyle)
         super.init(coder: aDecoder)
     }
 
