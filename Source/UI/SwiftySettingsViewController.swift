@@ -38,7 +38,6 @@ open class SwiftySettingsViewController : UITableViewController {
     @IBInspectable open var separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
     @IBInspectable open var selectionColor: UIColor? = UIColor.lightGray
     @IBInspectable open var forceRoundedCorners: Bool = false
-    @IBInspectable open var statusBarStyle: UIStatusBarStyle = .default
 
     public struct Appearance {
         let viewBackgroundColor: UIColor?
@@ -83,6 +82,8 @@ open class SwiftySettingsViewController : UITableViewController {
             self.statusBarStyle = splitVC.statusBarStyle
         }
     }
+
+    open var statusBarStyle: UIStatusBarStyle = .default
 
     open var settings: SwiftySettings! {
         didSet{
@@ -275,14 +276,14 @@ extension SwiftySettingsViewController {
 
         switch (node) {
         case let item as Screen:
-            let vc = SwiftySettingsViewController(appearance: self.appearance, screen: item)
+            let vc = SwiftySettingsViewController(appearance: Appearance(splitVC: self), screen: item)
             let nc = self.navigationController
             nc?.pushViewController(vc, animated: true)
         case let item as OptionsButton:
             let screen = Screen(title: item.title) {
                 [Section(title: "") { item.options }]
             }
-            let vc = SwiftySettingsViewController(appearance: self.appearance, screen: screen)
+            let vc = SwiftySettingsViewController(appearance: Appearance(splitVC: self), screen: screen)
             self.navigationController?.pushViewController(vc, animated: true)
         case let item as Option:
             item.selected = true
