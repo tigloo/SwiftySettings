@@ -310,6 +310,11 @@ extension SwiftySettingsViewController {
         return 44
     }
 
+    override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        print("s:\(indexPath.section), r: \(indexPath.row)")
+        return UITableViewAutomaticDimension
+    }
+
     override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
         let node = sections[indexPath.section].items[indexPath.row]

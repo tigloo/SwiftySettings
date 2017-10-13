@@ -85,13 +85,6 @@ class TextFieldCell : SettingsCell {
                                     attribute: .trailing,
                                     multiplier: 1.0,
                                     constant: spacing),
-                 NSLayoutConstraint(item: textField,
-                                    attribute: .centerY,
-                                    relatedBy: .equal,
-                                    toItem: titleLabel,
-                                    attribute: .centerY,
-                                    multiplier: 1.0,
-                                    constant: 0),
                  NSLayoutConstraint(item: contentView,
                                     attribute: .trailing,
                                     relatedBy: .equal,
@@ -105,7 +98,21 @@ class TextFieldCell : SettingsCell {
                                     toItem: nil,
                                     attribute: .notAnAttribute,
                                     multiplier: 1.0,
-                                    constant: 30)])
+                                    constant: 22),
+                 NSLayoutConstraint(item: textField,
+                                    attribute: .top,
+                                    relatedBy: .equal,
+                                    toItem: contentView,
+                                    attribute: .top,
+                                    multiplier: 1.0,
+                                    constant: spacing),
+                 NSLayoutConstraint(item: contentView,
+                                    attribute: .bottom,
+                                    relatedBy: .equal,
+                                    toItem: textField,
+                                    attribute: .bottom,
+                                    multiplier: 1.0,
+                                    constant: spacing)])
 
             didSetupConstraints = true
         }
