@@ -311,7 +311,6 @@ extension SwiftySettingsViewController {
     }
 
     override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        print("s:\(indexPath.section), r: \(indexPath.row)")
         return UITableViewAutomaticDimension
     }
 
