@@ -35,9 +35,12 @@ open class SwiftySettingsViewController : UITableViewController {
     @IBInspectable open var cellTextColor: UIColor? = UIColor.black
     @IBInspectable open var cellSecondaryTextColor: UIColor? = UIColor.darkGray
     @IBInspectable open var tintColor: UIColor? = nil
+    @IBInspectable open var textInputColor: UIColor? = UIColor.gray
     @IBInspectable open var separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
     @IBInspectable open var selectionColor: UIColor? = UIColor.lightGray
     @IBInspectable open var forceRoundedCorners: Bool = false
+    @IBInspectable open var headerFooterCellTextColor: UIColor? = UIColor.gray
+    @IBInspectable open var hideFooter: Bool = true
 
     public struct Appearance {
         let viewBackgroundColor: UIColor?
@@ -45,9 +48,12 @@ open class SwiftySettingsViewController : UITableViewController {
         let cellTextColor: UIColor?
         let cellSecondaryTextColor: UIColor?
         let tintColor: UIColor?
+        let textInputColor: UIColor?
         let separatorColor: UIColor?
         let selectionColor: UIColor?
         let forceRoundedCorners: Bool
+        let hideFooter: Bool
+        var headerFooterCellTextColor: UIColor?
         var statusBarStyle: UIStatusBarStyle
 
         init(viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
@@ -55,18 +61,24 @@ open class SwiftySettingsViewController : UITableViewController {
              cellTextColor: UIColor? = UIColor.black,
              cellSecondaryTextColor: UIColor? = UIColor.darkGray,
              tintColor: UIColor? = nil,
+             textInputColor: UIColor? = UIColor.gray,
              separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
              selectionColor: UIColor? = UIColor.lightGray,
              forceRoundedCorners: Bool = false,
+             hideFooter: Bool = true,
+             headerFooterCellTextColor: UIColor? = UIColor.darkText,
              statusBarStyle: UIStatusBarStyle = .default) {
             self.viewBackgroundColor = viewBackgroundColor
             self.cellBackgroundColor = cellBackgroundColor
             self.cellTextColor = cellTextColor
             self.cellSecondaryTextColor = cellSecondaryTextColor
             self.tintColor = tintColor
+            self.textInputColor = textInputColor
             self.separatorColor = separatorColor
             self.selectionColor = selectionColor
             self.forceRoundedCorners = forceRoundedCorners
+            self.hideFooter = hideFooter
+            self.headerFooterCellTextColor = headerFooterCellTextColor
             self.statusBarStyle = statusBarStyle
         }
 
@@ -76,9 +88,12 @@ open class SwiftySettingsViewController : UITableViewController {
             self.cellTextColor = splitVC.cellTextColor
             self.cellSecondaryTextColor = splitVC.cellSecondaryTextColor
             self.tintColor = splitVC.tintColor
+            self.textInputColor = splitVC.textInputColor
             self.separatorColor = splitVC.separatorColor
             self.selectionColor = splitVC.selectionColor
             self.forceRoundedCorners = splitVC.forceRoundedCorners
+            self.hideFooter = splitVC.hideFooter
+            self.headerFooterCellTextColor = splitVC.headerFooterCellTextColor
             self.statusBarStyle = splitVC.statusBarStyle
         }
     }
@@ -104,6 +119,7 @@ open class SwiftySettingsViewController : UITableViewController {
     fileprivate var storedContentInset = UIEdgeInsets.zero
     fileprivate var observerTokens: [NSObjectProtocol] = []
     fileprivate var editingIndexPath: IndexPath? = nil
+    fileprivate var currentFirstResponderTextField: UITextField? = nil
 
     var shouldDecorateWithRoundCorners: Bool {
         if self.forceRoundedCorners {
@@ -133,9 +149,12 @@ open class SwiftySettingsViewController : UITableViewController {
                                      cellTextColor: self.cellTextColor,
                                      cellSecondaryTextColor: self.cellSecondaryTextColor,
                                      tintColor: self.tintColor,
+                                     textInputColor: self.textInputColor,
                                      separatorColor: self.separatorColor,
                                      selectionColor: self.selectionColor,
                                      forceRoundedCorners: self.forceRoundedCorners,
+                                     hideFooter: self.hideFooter,
+                                     headerFooterCellTextColor: self.headerFooterCellTextColor,
                                      statusBarStyle: self.statusBarStyle)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
@@ -150,9 +169,12 @@ open class SwiftySettingsViewController : UITableViewController {
                                      cellTextColor: self.cellTextColor,
                                      cellSecondaryTextColor: self.cellSecondaryTextColor,
                                      tintColor: self.tintColor,
+                                     textInputColor: self.textInputColor,
                                      separatorColor: self.separatorColor,
                                      selectionColor: self.selectionColor,
                                      forceRoundedCorners: self.forceRoundedCorners,
+                                     hideFooter: self.hideFooter,
+                                     headerFooterCellTextColor: self.headerFooterCellTextColor,
                                      statusBarStyle: self.statusBarStyle)
         super.init(coder: aDecoder)
     }
@@ -166,6 +188,14 @@ open class SwiftySettingsViewController : UITableViewController {
     override open func viewWillAppear(_ animated: Bool) {
         DispatchQueue.main.async {
             self.tableView.reloadData()
+        }
+    }
+
+    override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        if let responder = self.currentFirstResponderTextField {
+            responder.resignFirstResponder()
+            self.currentFirstResponderTextField = nil
         }
     }
 
@@ -241,11 +271,13 @@ extension SwiftySettingsViewController {
     }
 
     override open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if let footerText = sections[section].footer {
-            let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
-            footer.appearance = appearance
-            footer.load(footerText)
-            return footer
+        if !appearance.hideFooter {
+            if let footerText = sections[section].footer  {
+                let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
+                footer.appearance = appearance
+                footer.load(footerText)
+                return footer
+            }
         }
         return nil
     }
@@ -268,11 +300,14 @@ extension SwiftySettingsViewController {
     }
 
     override open func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 22
+        return 64
     }
 
     override open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 22
+        if appearance.hideFooter {
+            return CGFloat.leastNormalMagnitude
+        }
+        return 44
     }
 
     override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -340,6 +375,13 @@ extension SwiftySettingsViewController {
             }
         }
     }
+
+    override open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if let responder = self.currentFirstResponderTextField {
+            responder.resignFirstResponder()
+            self.currentFirstResponderTextField = nil
+        }
+    }
 }
 
 // MARK: Keyboard handling
@@ -352,20 +394,18 @@ extension SwiftySettingsViewController : UITextFieldDelegate {
 
         observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil,
                                              queue: OperationQueue.main) { [weak self] note in
-
                                                 guard self != nil else { return }
 
                                                 guard let userInfo = note.userInfo as? [String: AnyObject],
-                                                    let keyboardRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+                                                    let keyboardFrameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
                                                     else {
                                                         fatalError("Could not extract keyboard CGRect")
                                                 }
-                                                var contentInsets = UIEdgeInsets(top: 0.0, left: 0.0,
-                                                                                 bottom: keyboardRect.size.height, right: 0.0)
-
-                                                if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
-                                                    contentInsets = UIEdgeInsetsMake(0.0, 0.0, (keyboardRect.size.height), 0.0);
-                                                }
+                                                let keyboardRect = keyboardFrameValue.cgRectValue
+                                                let contentInsets = UIEdgeInsets(top: 0.0,
+                                                                                 left: 0.0,
+                                                                                 bottom: keyboardRect.size.height,
+                                                                                 right: 0.0)
 
                                                 self!.storedContentInset = self!.tableView.contentInset
 
@@ -388,12 +428,14 @@ extension SwiftySettingsViewController : UITextFieldDelegate {
     }
 
     public func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.currentFirstResponderTextField = textField
         let point = self.tableView.convert(textField.bounds.origin, from:textField)
         self.editingIndexPath = self.tableView.indexPathForRow(at: point)
     }
 
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        self.currentFirstResponderTextField = nil
         return true
     }
 }
@@ -410,8 +452,10 @@ private extension SwiftySettingsViewController {
         tableView.dataSource = self
         tableView.separatorInset = UIEdgeInsets.zero;
         tableView.estimatedRowHeight = 100
-        tableView.estimatedSectionHeaderHeight = 22
+        tableView.estimatedSectionHeaderHeight = 44
         tableView.rowHeight = UITableViewAutomaticDimension
+
+        tableView.keyboardDismissMode = .onDrag
         
         // Configure appearance
         tableView.backgroundColor = appearance.viewBackgroundColor

@@ -351,12 +351,15 @@ open class Slider : Item<Float> {
 open class TextField : Item<String> {
 
     let secureTextEntry: Bool
+    let placeholderText: String
 
     public init(key: String, title: String, secureTextEntry: Bool = false,
+                placeholderText: String = "Type here",
                 defaultValue: String = "", subTitle: String? = nil,
                 valueChangedClosure: ValueChanged? = nil, onClickedClosure: OnClicked? = nil)
     {
         self.secureTextEntry = secureTextEntry
+        self.placeholderText = placeholderText
 
         super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: nil,
                    valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)

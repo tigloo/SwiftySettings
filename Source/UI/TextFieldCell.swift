@@ -60,45 +60,45 @@ class TextFieldCell : SettingsCell {
                                     toItem: contentView,
                                     attribute: .leading,
                                     multiplier: 1.0,
-                                    constant: 10),
+                                    constant: spacing),
                  NSLayoutConstraint(item: titleLabel,
-                                    attribute: .top,
+                                    attribute: .width,
+                                    relatedBy: .equal,
+                                    toItem: nil,
+                                    attribute: .notAnAttribute,
+                                    multiplier: 1.0,
+                                    constant: 80),
+                 NSLayoutConstraint(item: titleLabel,
+                                    attribute: .centerY,
                                     relatedBy: .equal,
                                     toItem: contentView,
-                                    attribute: .top,
+                                    attribute: .centerY,
                                     multiplier: 1.0,
-                                    constant: 5),
+                                    constant: 0),
                 ])
             // UITextField
             contentView.addConstraints(
                 [NSLayoutConstraint(item: textField,
-                                    attribute: .width,
+                                    attribute: .leading,
                                     relatedBy: .equal,
-                                    toItem: contentView,
-                                    attribute: .width,
-                                    multiplier: 0.9,
-                                    constant: 0),
-                 NSLayoutConstraint(item: contentView,
-                                    attribute: .centerX,
+                                    toItem: titleLabel,
+                                    attribute: .trailing,
+                                    multiplier: 1.0,
+                                    constant: spacing),
+                 NSLayoutConstraint(item: textField,
+                                    attribute: .centerY,
                                     relatedBy: .equal,
-                                    toItem: textField,
-                                    attribute: .centerX,
+                                    toItem: titleLabel,
+                                    attribute: .centerY,
                                     multiplier: 1.0,
                                     constant: 0),
-                 NSLayoutConstraint(item: titleLabel,
-                                    attribute: .bottom,
-                                    relatedBy: .equal,
-                                    toItem: textField,
-                                    attribute: .top,
-                                    multiplier: 1.0,
-                                    constant: -10),
                  NSLayoutConstraint(item: contentView,
-                                    attribute: .bottom,
+                                    attribute: .trailing,
                                     relatedBy: .equal,
                                     toItem: textField,
-                                    attribute: .bottom,
+                                    attribute: .trailing,
                                     multiplier: 1.0,
-                                    constant: 15),
+                                    constant: spacing),
                  NSLayoutConstraint(item: textField,
                                     attribute: .height,
                                     relatedBy: .equal,
@@ -131,8 +131,12 @@ class TextFieldCell : SettingsCell {
         super.configureAppearance()
 
         textField.tintColor = appearance?.tintColor
-        textField.borderStyle = .roundedRect
+        textField.textColor = appearance?.textInputColor
+        textField.borderStyle = .none
+        textField.textAlignment = .right
         titleLabel.textColor = appearance?.cellTextColor
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.3
     }
 
     func load(_ item: TextField) {
@@ -140,6 +144,7 @@ class TextFieldCell : SettingsCell {
 
         self.item = item
 
+        self.textField.placeholder = item.placeholderText
         self.titleLabel.text = item.title
         self.textField.text = item.value
         self.textField.isSecureTextEntry = item.secureTextEntry

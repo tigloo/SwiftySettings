@@ -53,12 +53,12 @@ class SectionHeaderFooter : UITableViewHeaderFooterView {
 
     func load(_ text: String) {
         configureAppearance()
-        titleLabel.text = text.capitalized
+        titleLabel.text = text.uppercased()
     }
 
     func configureAppearance() {
-        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote)
-        titleLabel.textColor = appearance?.cellTextColor
+        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
+        titleLabel.textColor = appearance?.headerFooterCellTextColor
         contentView.backgroundColor = appearance?.viewBackgroundColor
     }
 
@@ -71,12 +71,12 @@ class SectionHeaderFooter : UITableViewHeaderFooterView {
         // Title UILabel - Vertical Constraint
         contentView.addConstraint(NSLayoutConstraint(
             item: titleLabel,
-            attribute: .centerY,
+            attribute: .bottom,
             relatedBy: .equal,
             toItem: contentView,
-            attribute: .centerY,
+            attribute: .bottom,
             multiplier: 1.0,
-            constant: 0))
+            constant: -5))
 
         contentView.addConstraint(NSLayoutConstraint(
             item: titleLabel,
