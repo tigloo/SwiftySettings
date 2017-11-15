@@ -181,6 +181,10 @@ open class SwiftySettingsViewController : UITableViewController {
 
     override open func viewDidLoad() {
         super.viewDidLoad()
+
+        self.accessibilityElementsHidden = true
+        self.accessibilityViewIsModal = true
+
         setupTableView()
         setupKeyboardHandling()
     }
@@ -216,36 +220,43 @@ extension SwiftySettingsViewController {
         switch (node) {
         case let item as Switch:
             let cell = tableView.dequeueReusableCell(SwitchCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as TextOnly:
             let cell = tableView.dequeueReusableCell(TextOnlyCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as Slider:
             let cell = tableView.dequeueReusableCell(SliderCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as Option:
             let cell = tableView.dequeueReusableCell(OptionCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as OptionsButton:
             let cell = tableView.dequeueReusableCell(OptionsButtonCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as Screen:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as TextField:
             let cell = tableView.dequeueReusableCell(TextFieldCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
             cell.appearance = appearance
             cell.textFieldDelegate = self
             cell.load(item)
@@ -266,6 +277,7 @@ extension SwiftySettingsViewController {
     override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .header)
         header.appearance = appearance
+        header.accessibilityElementsHidden = true
         header.load(sections[section].title)
         return header
     }
@@ -275,6 +287,7 @@ extension SwiftySettingsViewController {
             if let footerText = sections[section].footer  {
                 let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
                 footer.appearance = appearance
+                footer.accessibilityElementsHidden = true
                 footer.load(footerText)
                 return footer
             }

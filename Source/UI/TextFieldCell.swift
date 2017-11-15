@@ -77,6 +77,14 @@ class TextFieldCell : SettingsCell {
                                     constant: 0),
                 ])
             // UITextField
+            let centeringConstraint = NSLayoutConstraint(item: textField,
+                                                         attribute:.centerY,
+                                                         relatedBy: .equal,
+                                                         toItem: contentView,
+                                                         attribute: .centerY,
+                                                         multiplier: 1.0,
+                                                         constant: 0)
+            centeringConstraint.priority = UILayoutPriority(900)
             contentView.addConstraints(
                 [NSLayoutConstraint(item: textField,
                                     attribute: .leading,
@@ -99,16 +107,10 @@ class TextFieldCell : SettingsCell {
                                     attribute: .notAnAttribute,
                                     multiplier: 1.0,
                                     constant: 22),
-                 NSLayoutConstraint(item: textField,
-                                    attribute: .top,
-                                    relatedBy: .equal,
-                                    toItem: contentView,
-                                    attribute: .top,
-                                    multiplier: 1.0,
-                                    constant: spacing),
+                 centeringConstraint,
                  NSLayoutConstraint(item: contentView,
                                     attribute: .bottom,
-                                    relatedBy: .equal,
+                                    relatedBy: .greaterThanOrEqual,
                                     toItem: textField,
                                     attribute: .bottom,
                                     multiplier: 1.0,
@@ -141,6 +143,7 @@ class TextFieldCell : SettingsCell {
         textField.textColor = appearance?.textInputColor
         textField.borderStyle = .none
         textField.textAlignment = .right
+        titleLabel.font = UIFont.systemFont(ofSize: 18)
         titleLabel.textColor = appearance?.cellTextColor
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.3
@@ -156,6 +159,8 @@ class TextFieldCell : SettingsCell {
         self.textField.text = item.value
         self.textField.isSecureTextEntry = item.secureTextEntry
         self.textField.delegate = textFieldDelegate
+        self.textField.autocorrectionType = (item.autoCorrection) ? .yes : .no
+        self.textField.spellCheckingType = (item.autoCorrection) ? .yes : .no // autoCorrection controls both
 
         self.configureAppearance()
         self.setNeedsUpdateConstraints()

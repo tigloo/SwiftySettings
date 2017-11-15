@@ -50,6 +50,7 @@ class SettingsCell : UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
+
         contentView.setNeedsLayout()
         contentView.layoutIfNeeded()
     }
@@ -158,12 +159,12 @@ class SettingsCell : UITableViewCell {
             didSetupConstraints = true
         }
 
+        super.updateConstraints()
+
         let titleFontHeight = titleLabel.font.lineHeight
         leftTitleVerticalConstraint.constant = (shouldRecalculateForDetail) ? -(titleFontHeight/2) : 0
         leftTitleConstraint.constant = iconView.frame.width + spacing
         leftSubTitleConstraint?.constant = iconView.frame.width + spacing
-
-        super.updateConstraints()
     }
 
     override var frame:CGRect {
@@ -204,6 +205,12 @@ class SettingsCell : UITableViewCell {
     }
 
     func configureAppearance() {
+        detailTextLabel?.font = UIFont.systemFont(ofSize: 12)
+        detailTextLabel?.adjustsFontSizeToFitWidth = true
+        detailTextLabel?.minimumScaleFactor = 0.3
+        textLabel?.font = UIFont.systemFont(ofSize: 18)
+        textLabel?.adjustsFontSizeToFitWidth = true
+        textLabel?.minimumScaleFactor = 0.3
         textLabel?.textColor = appearance?.cellTextColor
         detailTextLabel?.textColor = appearance?.cellTextColor
         contentView.backgroundColor = appearance?.cellBackgroundColor

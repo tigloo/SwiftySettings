@@ -351,17 +351,21 @@ open class Slider : Item<Float> {
 open class TextField : Item<String> {
 
     let secureTextEntry: Bool
+    let autoCorrection: Bool
     let placeholderText: String
 
     public init(key: String, title: String, secureTextEntry: Bool = false,
+                autoCorrection: Bool = true,
                 placeholderText: String = "Type here",
-                defaultValue: String = "", subTitle: String? = nil,
-                valueChangedClosure: ValueChanged? = nil, onClickedClosure: OnClicked? = nil)
+                defaultValue: String = "",
+                valueChangedClosure: ValueChanged? = nil,
+                onClickedClosure: OnClicked? = nil)
     {
         self.secureTextEntry = secureTextEntry
+        self.autoCorrection = autoCorrection
         self.placeholderText = placeholderText
 
-        super.init(key: key, title: title, defaultValue: defaultValue, subTitle: subTitle, icon: nil,
+        super.init(key: key, title: title, defaultValue: defaultValue, subTitle: nil, icon: nil,
                    valueChangedClosure: valueChangedClosure, onClickedClosure: onClickedClosure)
     }
 
