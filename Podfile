@@ -4,7 +4,7 @@ inhibit_all_warnings!
 use_frameworks!
 
 target :"Example" do
-    pod 'SwiftyUserDefaults', '~> 3.0.0'
+    pod 'SwiftyUserDefaults'
 end
 
 target :"Tests" do

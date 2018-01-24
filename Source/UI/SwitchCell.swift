@@ -95,9 +95,7 @@ class SwitchCell : SettingsCell {
     func load(_ item: Switch) {
         super.load(item)
         self.item = item
-        DispatchQueue.main.async(execute: {
-            self.switchView.setOn(item.value as Bool, animated: false)
-        })
+        self.switchView.setOn(item.value as Bool, animated: false)
         
         configureAppearance()
         setNeedsUpdateConstraints()

@@ -116,6 +116,18 @@ class ExampleSettingsController: SwiftySettingsViewController {
                  Option(title: "Only ground floor", optionId: 2),
                  Option(title: "Disarmed", optionId: 3)]
                 },
+             ToggleSection(title: "Optional status",
+                           toggleSwitchKey: "toggle-status",
+                           toggleSwitchTitle: "Enable optional status",
+                           defaultToggled: false) {
+                [TextField(key: "opt-input", title: "Optional parameters", secureTextEntry: false),
+                 Slider(key: "opt-2", title: "Status",
+                        minimumValueImage: UIImage(named: "slider-darker"),
+                        maximumValueImage: UIImage(named: "slider-brighter"),
+                        minimumValue: 0,
+                        maximumValue: 3,
+                        snapToInts: true)]
+                },
              Section(title: "Administrator") {
                 [TextField(key: "password", title: "Password", secureTextEntry: true)]
                 },

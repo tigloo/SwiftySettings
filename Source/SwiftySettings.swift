@@ -99,8 +99,11 @@ open class Section : TitledNode {
     open var footer: String?
 
     public init(title: String, footer: String? = nil,
+                onClickedClosure: OnClicked? = nil,
                 nodesClosure: (() -> [TitledNode])? = nil) {
-        super.init(title: title, icon: nil)
+        super.init(title: title,
+                   icon: nil,
+                   onClickedClosure: onClickedClosure)
 
         self.footer = footer
 
@@ -158,6 +161,50 @@ open class OptionsSection : Section, OptionsContainerType {
     }
 }
 
+open class ToggleSection : Section {
+
+    private var onToggled: OnClicked?
+    private var toggleSwitch: Switch?
+
+    public init(title: String,
+                toggleSwitchKey: String,
+                toggleSwitchTitle: String,
+                footer: String? = nil,
+                defaultToggled: Bool? = nil,
+                onToggledClosure: OnClicked? = nil,
+                nodesClosure: (() -> [TitledNode])? = nil) {
+        self.onToggled = onToggledClosure
+        super.init(title: title, footer: footer)
+
+        // Add the toggle switch
+        self.toggleSwitch = Switch(key: toggleSwitchKey,
+                                   title: toggleSwitchTitle,
+                                   defaultValue: defaultToggled ?? false,
+                                   valueChangedClosure: {
+                                    (key, value) in
+                                    if key == toggleSwitchKey {
+                                        self.onToggled?()
+                                        self.onClicked?()
+                                    }
+        })
+
+        items.append(self.toggleSwitch!)
+
+        // Add the rest of the nodes
+        if let closure = nodesClosure {
+            items.append(contentsOf: closure())
+        }
+    }
+
+    open func isToggled() -> Bool {
+        return self.toggleSwitch?.value ?? false
+    }
+
+    open func setToggleUpdateClosure(_ closure: @escaping OnClicked) {
+        self.onClicked = closure
+    }
+}
+
 // MARK: - Settings
 
 open class OptionsButton : TitledNode, OptionsContainerType {
@@ -202,7 +249,8 @@ open class OptionsButton : TitledNode, OptionsContainerType {
 open class Screen : TitledNode {
     open var sections: [Section] = []
 
-    public init(title: String, subTitle: String? = nil, icon: UIImage? = nil, sectionsClosure: (() -> [Section])? = nil) {
+    public init(title: String, subTitle: String? = nil, icon: UIImage? = nil,
+                sectionsClosure: (() -> [Section])? = nil) {
         super.init(title: title, subTitle: subTitle, icon: icon)
 
         if let closure = sectionsClosure {

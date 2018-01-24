@@ -67,7 +67,7 @@ class TextFieldCell : SettingsCell {
                                     toItem: nil,
                                     attribute: .notAnAttribute,
                                     multiplier: 1.0,
-                                    constant: 80),
+                                    constant: 150),
                  NSLayoutConstraint(item: titleLabel,
                                     attribute: .centerY,
                                     relatedBy: .equal,

@@ -206,6 +206,15 @@ open class SwiftySettingsViewController : UITableViewController {
     func load(_ screen: Screen) {
         self.sections = screen.sections
         self.title = screen.title
+
+        // The toggle-section must update the settings view
+        for section in self.sections {
+            if let toggleSection = section as? ToggleSection {
+                toggleSection.setToggleUpdateClosure {
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
 }
 
@@ -215,7 +224,8 @@ open class SwiftySettingsViewController : UITableViewController {
 extension SwiftySettingsViewController {
 
     override open func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let node = sections[indexPath.section].items[indexPath.row]
+        let section = sections[indexPath.section]
+        let node = section.items[indexPath.row]
 
         switch (node) {
         case let item as Switch:
@@ -254,6 +264,12 @@ extension SwiftySettingsViewController {
             cell.appearance = appearance
             cell.load(item)
             return cell
+        case let item as ToggleSection:
+            let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
+            cell.accessibilityElementsHidden = true
+            cell.appearance = appearance
+            cell.load(item)
+            return cell
         case let item as TextField:
             let cell = tableView.dequeueReusableCell(TextFieldCell.self, type: .cell)
             cell.accessibilityElementsHidden = true
@@ -271,7 +287,20 @@ extension SwiftySettingsViewController {
     }
 
     override open func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].items.count
+        let section = sections[section]
+
+        // ToggleSection is handled differently
+        if let toggleSection = section as? ToggleSection {
+            if toggleSection.isToggled() {
+                // Toggled, return all items
+                return toggleSection.items.count
+            } else {
+                // Not toggled, only return the first row
+                return 1
+            }
+        } else {
+            return section.items.count
+        }
     }
 
     override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -338,7 +367,7 @@ extension SwiftySettingsViewController {
             nc?.pushViewController(vc, animated: true)
         case let item as OptionsButton:
             let screen = Screen(title: item.title) {
-                [Section(title: "") { item.options }]
+                [Section(title: item.subTitle ?? "") { item.options }]
             }
             let vc = SwiftySettingsViewController(appearance: Appearance(splitVC: self), screen: screen)
             self.navigationController?.pushViewController(vc, animated: true)
@@ -349,7 +378,6 @@ extension SwiftySettingsViewController {
                 let _ = navigationController?.popViewController(animated: true)
                 self.tableView.reloadData()
             }
-
         default:
             break
         }
@@ -363,18 +391,6 @@ extension SwiftySettingsViewController {
 
     override open func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell,
                                  forRowAt indexPath: IndexPath) {
-
-        func decorateCellWithRoundCorners(_ cell: UITableViewCell,
-                                          roundingCorners corners: UIRectCorner) {
-            let maskPath = UIBezierPath(roundedRect: cell.bounds,
-                                        byRoundingCorners:  corners ,
-                                        cornerRadii: CGSize(width: 5.0, height: 5.0))
-            let shapeLayer = CAShapeLayer()
-            shapeLayer.frame = cell.bounds
-            shapeLayer.path = maskPath.cgPath
-            cell.layer.mask = shapeLayer
-            cell.clipsToBounds = true
-        }
 
         if shouldDecorateWithRoundCorners {
             let itemCount = sections[indexPath.section].items.count
@@ -398,6 +414,18 @@ extension SwiftySettingsViewController {
             responder.resignFirstResponder()
             self.currentFirstResponderTextField = nil
         }
+    }
+
+    func decorateCellWithRoundCorners(_ cell: UITableViewCell,
+                                      roundingCorners corners: UIRectCorner) {
+        let maskPath = UIBezierPath(roundedRect: cell.bounds,
+                                    byRoundingCorners:  corners ,
+                                    cornerRadii: CGSize(width: 5.0, height: 5.0))
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.frame = cell.bounds
+        shapeLayer.path = maskPath.cgPath
+        cell.layer.mask = shapeLayer
+        cell.clipsToBounds = true
     }
 }
 
