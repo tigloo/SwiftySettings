@@ -20,7 +20,7 @@ It helps to declare complex settings trees, provides a protocol to store and ret
 Using SwiftySettings you can declare a complex settings tree, map it to user interface and integrate with your persistance layer.
 User interface depicted below can be created using following code snippet.
 
-![SwiftySettings Preview](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-Preview.png)
+![SwiftySettings Preview](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-Preview.png)
 
 ```swift
 func loadSettingsTopDown() {
@@ -78,7 +78,7 @@ To integrate SwiftySettings into your Xcode project using CocoaPods, specify it 
 platform :ios, '8.0'
 use_frameworks!
 
-pod 'SwiftySettings'
+pod 'leetal-SwiftySettings'
 ```
 
 ## Step by step
@@ -146,7 +146,8 @@ init(key: String,
      title: String,
      defaultValue: Bool = false,
      icon: UIImage? = nil,
-     valueChangedClosure: ValueChanged? = nil)
+     valueChangedClosure: ValueChanged? = nil,
+     disabled: Bool = false)
 ```
 
 Arguments:
@@ -172,7 +173,8 @@ init(key: String,
      maximumValueImage: UIImage? = nil,
      minimumValue: Float = 0,
      maximumValue: Float = 100,
-     valueChangedClosure: ValueChanged? = nil)
+     valueChangedClosure: ValueChanged? = nil,
+     disabled: Bool = false)
 ```
 
 Arguments:
@@ -199,7 +201,8 @@ Note: OptionButton objects can be added as a children to Section object only.
 init(key: String,
      title: String,
      icon: UIImage? = nil,
-     optionsClosure: (() -> [Option])? = nil)
+     optionsClosure: (() -> [Option])? = nil,
+     disabled: Bool = false)
 ```
 
 Arguments:
@@ -219,8 +222,12 @@ TextField represents a UITableViewCell with UITextField for editable content.
 init(key: String,
      title: String,
      secureTextEntry: Bool = false,
+     autoCorrection: Bool = true,
+     placeholderText: String = "Type here",
      defaultValue: String = "",
-     valueChangedClosure: ValueChanged? = nil)
+     valueChangedClosure: ValueChanged? = nil,
+     onClickedClosure: OnClicked? = nil,
+     disabled: Bool = false)
 ```
 
 Arguments:
@@ -228,6 +235,8 @@ Arguments:
 - _key_: Storage key used to load and save currently selected Option
 - _title_: Title for the OptionsButton cell
 - _secureTextEntry_: Optional flag indicating if TextField has secured content (i.e. password)
+- _autoCorrection_: Optional flag indicating if TextField has autocorrection enabled
+- _placeholderText_: Specifies the placeholder text
 - _valueChangedClosure_: Optional closure invoked when value is changed
 
 ## Screen
@@ -257,6 +266,30 @@ Arguments:
 
 - _title_: Title for the Section with options
 - _footer_: Optional text added at the bottom of the section
+- _nodesClosure_: Closure returning an array of TitledNodes (Switch, Slider, OptionsButton, Screen)
+
+## ToggleSection
+
+ToggleSection is a SwiftySettings representation of a collection of UITableViewCells. It hides content unless toggled, whereas it will display the content - Much like the system settings for proxies..
+
+```swift
+init(title: String,
+     toggleSwitchKey: String,
+     toggleSwitchTitle: String,
+     footer: String? = nil,
+     defaultToggled: Bool? = nil,
+     onToggledClosure: OnClicked? = nil,
+     nodesClosure: (() -> [TitledNode])? = nil)
+```
+
+
+Arguments:
+
+- _title_: Title for the Section with options
+- _toggleSwitchKey_: key for the toggle switch
+- _toggleSwitchTitle_: Title for the toggle switch
+- _footer_: Optional footer string
+- _onToggledClosure_: Optional closure that is triggered when the toggle switch value changes
 - _nodesClosure_: Closure returning an array of TitledNodes (Switch, Slider, OptionsButton, Screen)
 
 ## Options Section
