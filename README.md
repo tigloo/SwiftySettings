@@ -125,7 +125,7 @@ class ExampleSettingsController: SwiftySettingsViewController {
 
 Note: The SwiftySettings object is responsible for declaring a tree of settings. The above snippet declares a single UITableViewController titled "Main Screen Name", having section named "Section Name" and one UISwitch setting with title and icon. SwiftySettings object uses Storage object to load and save settings state.
 
-![SwiftySettings Single Screen](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-SingleScreen.png)
+![SwiftySettings Single Screen](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-SingleScreen.png)
 
 ## SwiftySettings DSL
 
@@ -133,11 +133,11 @@ SwiftySettings allows to represent a complex, multi level tree of settings. As d
 Screen acts as a container for all settings that are visible on a single UITableView. It is initiated with an array of Section and Option Section elements.
 Each Section and Option Section is mapped to UITableView Header or Footer. Section object can include Switch, Slider or Option Button settings, while Option Section includes only Option elements. Additionally Section may include other Screen objects, thus introducing new level of settings navigation.
 
-![SwiftySettings Model](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-Model.png)
+![SwiftySettings Model](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-Model.png)
 
 ## Switch
 
-![SwiftySettings Switch](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-Switch.png)
+![SwiftySettings Switch](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-Switch.png)
 
 Switch represents a UITableViewCell with UISwitch, UILabel and optional icon. Switch elements can be only added to Section and may be initialized as follows:
 
@@ -160,7 +160,7 @@ Arguments:
 
 ## Slider
 
-![SwiftySettings Slider](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-Slider.png)
+![SwiftySettings Slider](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-Slider.png)
 
 Slider represents a UITableViewCell with UISlider, UILabels and optional icon. Slider elements can be only added to Section and may be initialized as follows:
 
@@ -191,7 +191,7 @@ Arguments:
 
 ## Options Button
 
-![SwiftySettings Options Button](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-OptionsButton.png)
+![SwiftySettings Options Button](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-OptionsButton.png)
 
 OptionsButton represents a UITableViewCell with two UILabels, one with settings title, second with currently selected option. When tapping on OptionsButton cell, navigation is moved to new UITableView with Option cells defined as a part of OptionsButton object. If Option is selected navigation moves back to previous view.
 
@@ -214,7 +214,7 @@ Arguments:
 
 ## TextField
 
-![SwiftySettings TextField](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-TextField.png)
+![SwiftySettings TextField](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-TextField.png)
 
 TextField represents a UITableViewCell with UITextField for editable content.
 
@@ -244,7 +244,7 @@ Arguments:
 When added to a Section, Screen object will be mapped to UITableViewCell with UILabel set to Screen title.
 Upon tapping on such an element, navigation will move to new UITableView represented by Screen object and all its children Section elements will be displayed.
 
-![SwiftySettings Screen](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-ScreenButton.png)
+![SwiftySettings Screen](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-ScreenButton.png)
 
 ```swift
 init(title: String,
@@ -272,6 +272,14 @@ Arguments:
 
 ToggleSection is a SwiftySettings representation of a collection of UITableViewCells. It hides content unless toggled, whereas it will display the content - Much like the system settings for proxies..
 
+Untoggled:
+
+![SwiftySettings ToggleSection](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-ToggleSectionUntoggled.png)
+
+Toggled:
+
+![SwiftySettings ToggleSection](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-ToggleSectionToggled.png)
+
 ```swift
 init(title: String,
      toggleSwitchKey: String,
@@ -294,7 +302,7 @@ Arguments:
 
 ## Options Section
 
-![SwiftySettings Options Section](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-OptionsSection.png)
+![SwiftySettings Options Section](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-OptionsSection.png)
 
 OptionsSection is a type of Section that can be added directly to a Screen object. The difference between Section and OptionsSection is that, the latter can contain only Option objects. From the UI perspective, OptionSection represents a UITableView section filled with UITableViewCells with single choice selection options.
 
@@ -333,7 +341,7 @@ Note: When using SwiftySettings object, the first Screen object is created autom
 
 SwiftySettings appearance can be configured using Interface Builder.
 
-![SwiftySettings Interface Builder](https://github.com/tgebarowski/SwiftySettings/blob/master/doc/SwiftySettings-InterfaceBuilder.png)
+![SwiftySettings Interface Builder](https://github.com/leetal/SwiftySettings/blob/master/doc/SwiftySettings-InterfaceBuilder.png)
 
 
 ## License
