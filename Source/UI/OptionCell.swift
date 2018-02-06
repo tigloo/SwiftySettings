@@ -41,5 +41,6 @@ class OptionCell : SettingsCell {
     func load(_ item: Option) {
         super.load(item)
         accessoryType = item.selected ? .checkmark : .none;
+        self.isUserInteractionEnabled = !item.disabled
     }
 }

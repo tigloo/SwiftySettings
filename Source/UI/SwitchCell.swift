@@ -96,6 +96,7 @@ class SwitchCell : SettingsCell {
         super.load(item)
         self.item = item
         self.switchView.setOn(item.value as Bool, animated: false)
+        self.switchView.isEnabled = !item.disabled
         
         configureAppearance()
         setNeedsUpdateConstraints()

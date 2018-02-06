@@ -162,6 +162,8 @@ class TextFieldCell : SettingsCell {
         self.textField.autocorrectionType = (item.autoCorrection) ? .yes : .no
         self.textField.spellCheckingType = (item.autoCorrection) ? .yes : .no // autoCorrection controls both
 
+        self.textField.isEnabled = !item.disabled
+
         self.configureAppearance()
         self.setNeedsUpdateConstraints()
     }

@@ -169,6 +169,7 @@ class SliderCell : SettingsCell {
         self.sliderView.maximumValueImage = item.maximumValueImage
 
         self.sliderView.setValue((self.item.snapToInts) ? Float(lroundf(self.item.value)) : item.value, animated: false)
+        self.sliderView.isEnabled = !item.disabled
 
         self.configureAppearance()
         self.setNeedsUpdateConstraints()

@@ -108,6 +108,8 @@ class OptionsButtonCell : SettingsCell {
             self.imageView?.image = image
         }
 
+        self.isUserInteractionEnabled = !item.disabled
+
         configureAppearance()
         setNeedsUpdateConstraints()
     }
