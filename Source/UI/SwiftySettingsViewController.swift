@@ -41,6 +41,7 @@ open class SwiftySettingsViewController : UITableViewController {
     @IBInspectable open var forceRoundedCorners: Bool = false
     @IBInspectable open var headerFooterCellTextColor: UIColor? = UIColor.gray
     @IBInspectable open var hideFooter: Bool = true
+    @IBInspectable open var enableAccessibility: Bool = false
 
     public struct Appearance {
         let viewBackgroundColor: UIColor?
@@ -55,6 +56,7 @@ open class SwiftySettingsViewController : UITableViewController {
         let hideFooter: Bool
         var headerFooterCellTextColor: UIColor?
         var statusBarStyle: UIStatusBarStyle
+        let enableAccessibility: Bool
 
         init(viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
              cellBackgroundColor: UIColor? = UIColor.white,
@@ -66,6 +68,7 @@ open class SwiftySettingsViewController : UITableViewController {
              selectionColor: UIColor? = UIColor.lightGray,
              forceRoundedCorners: Bool = false,
              hideFooter: Bool = true,
+             enableAccessibility: Bool = false,
              headerFooterCellTextColor: UIColor? = UIColor.darkText,
              statusBarStyle: UIStatusBarStyle = .default) {
             self.viewBackgroundColor = viewBackgroundColor
@@ -80,6 +83,7 @@ open class SwiftySettingsViewController : UITableViewController {
             self.hideFooter = hideFooter
             self.headerFooterCellTextColor = headerFooterCellTextColor
             self.statusBarStyle = statusBarStyle
+            self.enableAccessibility = enableAccessibility
         }
 
         init(splitVC: SwiftySettingsViewController) {
@@ -93,6 +97,7 @@ open class SwiftySettingsViewController : UITableViewController {
             self.selectionColor = splitVC.selectionColor
             self.forceRoundedCorners = splitVC.forceRoundedCorners
             self.hideFooter = splitVC.hideFooter
+            self.enableAccessibility = splitVC.enableAccessibility
             self.headerFooterCellTextColor = splitVC.headerFooterCellTextColor
             self.statusBarStyle = splitVC.statusBarStyle
         }
@@ -182,7 +187,7 @@ open class SwiftySettingsViewController : UITableViewController {
     override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.accessibilityElementsHidden = true
+        self.accessibilityElementsHidden = !self.appearance.enableAccessibility
         self.accessibilityViewIsModal = true
 
         setupTableView()
@@ -230,49 +235,49 @@ extension SwiftySettingsViewController {
         switch (node) {
         case let item as Switch:
             let cell = tableView.dequeueReusableCell(SwitchCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as TextOnly:
             let cell = tableView.dequeueReusableCell(TextOnlyCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as Slider:
             let cell = tableView.dequeueReusableCell(SliderCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as Option:
             let cell = tableView.dequeueReusableCell(OptionCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as OptionsButton:
             let cell = tableView.dequeueReusableCell(OptionsButtonCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as Screen:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as ToggleSection:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.load(item)
             return cell
         case let item as TextField:
             let cell = tableView.dequeueReusableCell(TextFieldCell.self, type: .cell)
-            cell.accessibilityElementsHidden = true
+            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
             cell.appearance = appearance
             cell.textFieldDelegate = self
             cell.load(item)
@@ -306,7 +311,7 @@ extension SwiftySettingsViewController {
     override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .header)
         header.appearance = appearance
-        header.accessibilityElementsHidden = true
+        header.accessibilityElementsHidden = !self.appearance.enableAccessibility
         header.load(sections[section].title)
         return header
     }
@@ -316,7 +321,7 @@ extension SwiftySettingsViewController {
             if let footerText = sections[section].footer  {
                 let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
                 footer.appearance = appearance
-                footer.accessibilityElementsHidden = true
+                footer.accessibilityElementsHidden = !self.appearance.enableAccessibility
                 footer.load(footerText)
                 return footer
             }
