@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'leetal-SwiftySettings'
-  s.version = '1.0.3'
+  s.version = '1.0.4'
   s.license = 'MIT'
   s.summary = 'Declarative in-app settings stack in Swift'
   s.homepage = 'https://github.com/leetal/SwiftySettings'
