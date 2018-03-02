@@ -41,7 +41,7 @@ open class SwiftySettingsViewController : UITableViewController {
     @IBInspectable open var forceRoundedCorners: Bool = false
     @IBInspectable open var headerFooterCellTextColor: UIColor? = UIColor.gray
     @IBInspectable open var hideFooter: Bool = true
-    @IBInspectable open var enableAccessibility: Bool = false
+    @IBInspectable open var enableAccessibility: Bool = true
 
     public struct Appearance {
         let viewBackgroundColor: UIColor?
@@ -105,7 +105,7 @@ open class SwiftySettingsViewController : UITableViewController {
 
     open var statusBarStyle: UIStatusBarStyle = .default {
         didSet {
-            self.appearance.statusBarStyle = statusBarStyle
+            self.appearance?.statusBarStyle = statusBarStyle
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
@@ -120,7 +120,7 @@ open class SwiftySettingsViewController : UITableViewController {
     }
 
     fileprivate var sections: [Section] = []
-    fileprivate var appearance: Appearance
+    fileprivate var appearance: Appearance?
     fileprivate var storedContentInset = UIEdgeInsets.zero
     fileprivate var observerTokens: [NSObjectProtocol] = []
     fileprivate var editingIndexPath: IndexPath? = nil
@@ -134,7 +134,7 @@ open class SwiftySettingsViewController : UITableViewController {
     }
 
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.appearance.statusBarStyle
+        return self.appearance?.statusBarStyle ?? .default
     }
 
     public convenience init(settings: SwiftySettings) {
@@ -149,18 +149,6 @@ open class SwiftySettingsViewController : UITableViewController {
     }
 
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        self.appearance = Appearance(viewBackgroundColor: self.viewBackgroundColor,
-                                     cellBackgroundColor: self.cellBackgroundColor,
-                                     cellTextColor: self.cellTextColor,
-                                     cellSecondaryTextColor: self.cellSecondaryTextColor,
-                                     tintColor: self.tintColor,
-                                     textInputColor: self.textInputColor,
-                                     separatorColor: self.separatorColor,
-                                     selectionColor: self.selectionColor,
-                                     forceRoundedCorners: self.forceRoundedCorners,
-                                     hideFooter: self.hideFooter,
-                                     headerFooterCellTextColor: self.headerFooterCellTextColor,
-                                     statusBarStyle: self.statusBarStyle)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
@@ -169,27 +157,15 @@ open class SwiftySettingsViewController : UITableViewController {
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        self.appearance = Appearance(viewBackgroundColor: self.viewBackgroundColor,
-                                     cellBackgroundColor: self.cellBackgroundColor,
-                                     cellTextColor: self.cellTextColor,
-                                     cellSecondaryTextColor: self.cellSecondaryTextColor,
-                                     tintColor: self.tintColor,
-                                     textInputColor: self.textInputColor,
-                                     separatorColor: self.separatorColor,
-                                     selectionColor: self.selectionColor,
-                                     forceRoundedCorners: self.forceRoundedCorners,
-                                     hideFooter: self.hideFooter,
-                                     headerFooterCellTextColor: self.headerFooterCellTextColor,
-                                     statusBarStyle: self.statusBarStyle)
         super.init(coder: aDecoder)
     }
 
     override open func viewDidLoad() {
         super.viewDidLoad()
 
-        self.accessibilityElementsHidden = !self.appearance.enableAccessibility
-        self.accessibilityViewIsModal = true
+        self.isAccessibilityElement = false
 
+        setupAppearence()
         setupTableView()
         setupKeyboardHandling()
     }
@@ -232,53 +208,55 @@ extension SwiftySettingsViewController {
         let section = sections[indexPath.section]
         let node = section.items[indexPath.row]
 
+        guard let i_appearence = self.appearance else { return UITableViewCell() }
+
         switch (node) {
         case let item as Switch:
             let cell = tableView.dequeueReusableCell(SwitchCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as TextOnly:
             let cell = tableView.dequeueReusableCell(TextOnlyCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as Slider:
             let cell = tableView.dequeueReusableCell(SliderCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as Option:
             let cell = tableView.dequeueReusableCell(OptionCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as OptionsButton:
             let cell = tableView.dequeueReusableCell(OptionsButtonCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as Screen:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as ToggleSection:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.load(item)
             return cell
         case let item as TextField:
             let cell = tableView.dequeueReusableCell(TextFieldCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !self.appearance.enableAccessibility
-            cell.appearance = appearance
+            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
+            cell.appearance = i_appearence
             cell.textFieldDelegate = self
             cell.load(item)
             return cell
@@ -310,18 +288,24 @@ extension SwiftySettingsViewController {
 
     override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .header)
-        header.appearance = appearance
-        header.accessibilityElementsHidden = !self.appearance.enableAccessibility
+
+        guard let i_appearence = self.appearance else { return nil }
+
+        header.appearance = i_appearence
+        header.accessibilityElementsHidden = !i_appearence.enableAccessibility
         header.load(sections[section].title)
         return header
     }
 
     override open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        if !appearance.hideFooter {
+
+        guard let i_appearence = self.appearance else { return nil }
+
+        if !i_appearence.hideFooter {
             if let footerText = sections[section].footer  {
                 let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
-                footer.appearance = appearance
-                footer.accessibilityElementsHidden = !self.appearance.enableAccessibility
+                footer.appearance = i_appearence
+                footer.accessibilityElementsHidden = !i_appearence.enableAccessibility
                 footer.load(footerText)
                 return footer
             }
@@ -351,7 +335,10 @@ extension SwiftySettingsViewController {
     }
 
     override open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if appearance.hideFooter {
+
+        guard let i_appearence = self.appearance else { return CGFloat.leastNormalMagnitude }
+
+        if i_appearence.hideFooter {
             return CGFloat.leastNormalMagnitude
         }
         return 44
@@ -495,8 +482,25 @@ extension SwiftySettingsViewController : UITextFieldDelegate {
 //MARK: Private
 
 private extension SwiftySettingsViewController {
+    func setupAppearence() {
+        self.appearance = Appearance(viewBackgroundColor: self.viewBackgroundColor,
+                                     cellBackgroundColor: self.cellBackgroundColor,
+                                     cellTextColor: self.cellTextColor,
+                                     cellSecondaryTextColor: self.cellSecondaryTextColor,
+                                     tintColor: self.tintColor,
+                                     textInputColor: self.textInputColor,
+                                     separatorColor: self.separatorColor,
+                                     selectionColor: self.selectionColor,
+                                     forceRoundedCorners: self.forceRoundedCorners,
+                                     hideFooter: self.hideFooter,
+                                     enableAccessibility: self.enableAccessibility,
+                                     headerFooterCellTextColor: self.headerFooterCellTextColor,
+                                     statusBarStyle: self.statusBarStyle)
+    }
     
     func setupTableView() {
+
+        guard let i_appearence = self.appearance else { return }
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -508,9 +512,9 @@ private extension SwiftySettingsViewController {
         tableView.keyboardDismissMode = .onDrag
         
         // Configure appearance
-        tableView.backgroundColor = appearance.viewBackgroundColor
-        tableView.separatorColor = appearance.separatorColor;
-        
+        tableView.backgroundColor = i_appearence.viewBackgroundColor
+        tableView.separatorColor = i_appearence.separatorColor;
+
         tableView.registerClass(SwitchCell.self, type: .cell)
         tableView.registerClass(SliderCell.self, type: .cell)
         tableView.registerClass(OptionCell.self, type: .cell)

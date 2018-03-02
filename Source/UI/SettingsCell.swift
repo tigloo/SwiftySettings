@@ -185,7 +185,7 @@ class SettingsCell : UITableViewCell {
 
     func load(_ item: TitledNode) {
 
-        configureAppearance()
+        configureAppearance(item)
 
         textLabel?.text = item.title
 
@@ -204,18 +204,49 @@ class SettingsCell : UITableViewCell {
         setNeedsUpdateConstraints()
     }
 
-    func configureAppearance() {
+    func configureAppearance(_ item: TitledNode) {
+        self.isAccessibilityElement = false
+        self.accessibilityElements = [contentView]
+
         detailTextLabel?.font = UIFont.systemFont(ofSize: 12)
         detailTextLabel?.adjustsFontSizeToFitWidth = true
         detailTextLabel?.minimumScaleFactor = 0.3
+        detailTextLabel?.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        detailTextLabel?.accessibilityTraits = UIAccessibilityTraitStaticText
+        detailTextLabel?.accessibilityLabel = item.subTitle
+        detailTextLabel?.accessibilityIdentifier = "Settings_Cell_Subtitle_\(item.subTitle ?? "")"
+        if let detailTextLabel = detailTextLabel {
+            self.accessibilityElements?.append(detailTextLabel)
+        }
+
         textLabel?.font = UIFont.systemFont(ofSize: 18)
         textLabel?.adjustsFontSizeToFitWidth = true
         textLabel?.minimumScaleFactor = 0.3
+        textLabel?.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        textLabel?.accessibilityTraits = UIAccessibilityTraitStaticText
+        textLabel?.accessibilityLabel = item.title
+        textLabel?.accessibilityIdentifier = "Settings_Cell_Title_\(item.title)"
+        if let textLabel = textLabel {
+            self.accessibilityElements?.append(textLabel)
+        }
+
         textLabel?.textColor = appearance?.cellTextColor
         detailTextLabel?.textColor = appearance?.cellTextColor
         contentView.backgroundColor = appearance?.cellBackgroundColor
+        contentView.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        contentView.accessibilityTraits = UIAccessibilityTraitNone
+
+        imageView?.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        imageView?.accessibilityTraits = UIAccessibilityTraitStaticText
+        imageView?.accessibilityLabel = item.title
+        imageView?.accessibilityIdentifier = "Settings_Cell_Image_\(item.title)"
+        if let imageView = imageView {
+            self.accessibilityElements?.append(imageView)
+        }
+
         backgroundColor = appearance?.cellBackgroundColor
         selectedBackgroundView = UIView()
         selectedBackgroundView?.backgroundColor = appearance?.selectionColor
+        
     }
 }

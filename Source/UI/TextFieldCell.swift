@@ -136,35 +136,46 @@ class TextFieldCell : SettingsCell {
                             for: .editingChanged)
     }
 
-    override func configureAppearance() {
-        super.configureAppearance()
+    override func configureAppearance(_ item: TitledNode) {
+        super.configureAppearance(item)
 
         textField.tintColor = appearance?.tintColor
         textField.textColor = appearance?.textInputColor
         textField.borderStyle = .none
         textField.textAlignment = .right
+        textField.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        textField.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(textField)
+
         titleLabel.font = UIFont.systemFont(ofSize: 18)
         titleLabel.textColor = appearance?.cellTextColor
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.3
+        titleLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        titleLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(titleLabel)
     }
 
     func load(_ item: TextField) {
         super.load(item)
-
         self.item = item
 
-        self.textField.placeholder = item.placeholderText
+        self.configureAppearance(item)
+
         self.titleLabel.text = item.title
+        self.titleLabel.accessibilityIdentifier = "Textfield_Cell_Label_\(item.key)"
+        self.titleLabel.accessibilityLabel = "Textfield Label \(item.title)"
+
+        self.textField.placeholder = item.placeholderText
         self.textField.text = item.value
         self.textField.isSecureTextEntry = item.secureTextEntry
         self.textField.delegate = textFieldDelegate
         self.textField.autocorrectionType = (item.autoCorrection) ? .yes : .no
         self.textField.spellCheckingType = (item.autoCorrection) ? .yes : .no // autoCorrection controls both
-
         self.textField.isEnabled = !item.disabled
+        self.textField.accessibilityIdentifier = "Textfield_Cell_Textfield_\(item.key)"
+        self.textField.accessibilityLabel = "Textfield \(item.title) Placeholder \(item.placeholderText) Value \(item.value)"
 
-        self.configureAppearance()
         self.setNeedsUpdateConstraints()
     }
 

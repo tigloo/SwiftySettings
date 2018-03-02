@@ -86,19 +86,26 @@ class SwitchCell : SettingsCell {
         switchView.addTarget(self, action: #selector(SwitchCell.switchChanged(_:)), for: .valueChanged)
     }
 
-    override func configureAppearance() {
-        super.configureAppearance()
+    override func configureAppearance(_ item: TitledNode) {
+        super.configureAppearance(item)
         switchView.tintColor = appearance?.tintColor
         switchView.onTintColor = appearance?.tintColor
+        switchView.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        switchView.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(switchView)
     }
 
     func load(_ item: Switch) {
         super.load(item)
         self.item = item
+
+        configureAppearance(item)
+
         self.switchView.setOn(item.value as Bool, animated: false)
         self.switchView.isEnabled = !item.disabled
-        
-        configureAppearance()
+        self.switchView.accessibilityIdentifier = "Switch_\(item.key)"
+        self.switchView.accessibilityLabel = "Switch \(item.title) Is \(item.value ? "On" : "Off")"
+
         setNeedsUpdateConstraints()
     }
 

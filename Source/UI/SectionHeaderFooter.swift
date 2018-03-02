@@ -54,12 +54,23 @@ class SectionHeaderFooter : UITableViewHeaderFooterView {
     func load(_ text: String) {
         configureAppearance()
         titleLabel.text = text.uppercased()
+        titleLabel.accessibilityIdentifier = "Header_Footer_Label_\(text)"
+        titleLabel.accessibilityLabel = text
+        contentView.accessibilityIdentifier = "Header_Footer_ContentView_\(text)"
     }
 
     func configureAppearance() {
         titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
         titleLabel.textColor = appearance?.headerFooterCellTextColor
+        titleLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        titleLabel.accessibilityTraits = UIAccessibilityTraitStaticText | UIAccessibilityTraitHeader
+
+        self.isAccessibilityElement = false
+        self.accessibilityElements = [contentView, titleLabel]
+
         contentView.backgroundColor = appearance?.viewBackgroundColor
+        contentView.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        contentView.accessibilityTraits = UIAccessibilityTraitNone
     }
 
     func setup() {

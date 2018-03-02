@@ -147,31 +147,50 @@ class SliderCell : SettingsCell {
                              for: .valueChanged)
     }
 
-    override func configureAppearance() {
-        super.configureAppearance()
+    override func configureAppearance(_ item: TitledNode) {
+        super.configureAppearance(item)
 
         sliderView.tintColor = appearance?.tintColor
+        sliderView.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        sliderView.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(sliderView)
+
         titleLabel.textColor = appearance?.cellTextColor
+        titleLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        titleLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(titleLabel)
+
         valueLabel.textColor = appearance?.cellTextColor
+        valueLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        valueLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(valueLabel)
     }
 
     func load(_ item: Slider) {
         super.load(item)
         self.item = item
 
+        self.configureAppearance(item)
+
         if !item.title.isEmpty {
             self.titleLabel.text = item.title
+            self.titleLabel.accessibilityIdentifier = "Slider_TitleLabel_\(item.key))"
+            self.titleLabel.accessibilityLabel = "Slider \(item.title)"
+
             self.valueLabel.text = String(Int(item.value))
+            self.valueLabel.accessibilityIdentifier = "Slider_ValueLabel_\(item.key))"
+            self.valueLabel.accessibilityLabel = "Slider \(item.title) Value \(String(item.value))"
         }
         self.sliderView.minimumValue = item.minimumValue
         self.sliderView.maximumValue = item.maximumValue
         self.sliderView.minimumValueImage = item.minimumValueImage
         self.sliderView.maximumValueImage = item.maximumValueImage
+        self.sliderView.accessibilityIdentifier = "Slider_View_\(item.key))"
+        self.sliderView.accessibilityLabel = "Slider View \(item.title)"
 
         self.sliderView.setValue((self.item.snapToInts) ? Float(lroundf(self.item.value)) : item.value, animated: false)
         self.sliderView.isEnabled = !item.disabled
 
-        self.configureAppearance()
         self.setNeedsUpdateConstraints()
     }
 

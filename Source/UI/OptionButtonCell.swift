@@ -94,14 +94,23 @@ class OptionsButtonCell : SettingsCell {
         contentView.addSubview(selectedOptionLabel)
     }
 
-    override func configureAppearance() {
-        super.configureAppearance()
+    override func configureAppearance(_ item: TitledNode) {
+        super.configureAppearance(item)
         selectedOptionLabel.textColor = appearance?.cellSecondaryTextColor
+        selectedOptionLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
+        selectedOptionLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        self.accessibilityElements?.append(selectedOptionLabel)
     }
 
     func load(_ item: OptionsButton) {
         super.load(item)
+
+        configureAppearance(item)
+
         self.selectedOptionLabel.text = item.selectedOptionTitle
+        self.selectedOptionLabel.accessibilityIdentifier = "Option_Button_Cell_\(item.key))"
+        self.selectedOptionLabel.accessibilityLabel = "Option Button \(item.title) Selected Value \(item.selectedOptionTitle)"
+
         self.accessoryType = .disclosureIndicator
 
         if let image = item.icon {
@@ -110,7 +119,6 @@ class OptionsButtonCell : SettingsCell {
 
         self.isUserInteractionEnabled = !item.disabled
 
-        configureAppearance()
         setNeedsUpdateConstraints()
     }
 }
