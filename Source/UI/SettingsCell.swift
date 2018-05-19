@@ -114,7 +114,7 @@ class SettingsCell : UITableViewCell {
                 multiplier: 1.0,
                 constant: height)
 
-            heightConstraint.priority = 999
+            heightConstraint.priority = UILayoutPriority(999)
             contentView.addConstraint(heightConstraint)
 
 
