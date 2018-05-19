@@ -81,9 +81,9 @@ class OptionsButtonCell : SettingsCell {
     override func setupViews() {
         super.setupViews()
 
-        textLabel?.setContentHuggingPriority(UILayoutPriorityDefaultHigh,
+        textLabel?.setContentHuggingPriority(UILayoutPriority.defaultHigh,
             for: .horizontal)
-        selectedOptionLabel.setContentCompressionResistancePriority(UILayoutPriorityDefaultHigh,
+        selectedOptionLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh,
             for: .horizontal)
 
         contentView.addSubview(selectedOptionLabel)
