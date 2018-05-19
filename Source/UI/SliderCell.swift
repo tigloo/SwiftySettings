@@ -170,7 +170,7 @@ class SliderCell : SettingsCell {
         self.setNeedsUpdateConstraints()
     }
 
-    func sliderChanged(_ sender: AnyObject) {
+    @objc func sliderChanged(_ sender: AnyObject) {
         item.value = sliderView.value
         DispatchQueue.main.async {
             self.valueLabel.text = String(Int(self.item.value))
