@@ -145,7 +145,7 @@ class TextFieldCell : SettingsCell {
         self.setNeedsUpdateConstraints()
     }
 
-    func textInputChanged(_ sender: AnyObject) {
+    @objc func textInputChanged(_ sender: AnyObject) {
         if let text = textField.text {
             item.value = text
         }
