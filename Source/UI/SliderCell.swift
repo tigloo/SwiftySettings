@@ -35,7 +35,7 @@ class SliderCell : SettingsCell {
     let valueLabel = UILabel()
     let sliderView = UISlider()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }

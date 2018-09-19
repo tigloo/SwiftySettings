@@ -41,8 +41,8 @@ public protocol SettingsStorageType {
 // MARK: - Base
 
 open class TitledNode {
-    open let title: String
-    open let icon: UIImage?
+    public let title: String
+    public let icon: UIImage?
     open var storage: SettingsStorageType?
 
     public init (title: String, icon: UIImage? = nil) {
@@ -53,8 +53,8 @@ open class TitledNode {
 
 open class Item<T> : TitledNode
 {
-    open let key: String
-    open let defaultValue: T
+    public let key: String
+    public let defaultValue: T
 
     open var value: T
 

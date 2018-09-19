@@ -278,19 +278,19 @@ extension SettingsViewController : UITextFieldDelegate {
 
         let nc = NotificationCenter.default
 
-        observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil,
+        observerTokens.append(nc.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil,
             queue: OperationQueue.main) { [weak self] note in
 
                 guard let userInfo = note.userInfo as? [String: AnyObject],
-                    let keyboardRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+                    let keyboardRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
                 else {
                         fatalError("Could not extract keyboard CGRect")
                 }
                 var contentInsets = UIEdgeInsets(top: 0.0, left: 0.0,
                     bottom: keyboardRect.size.height, right: 0.0)
 
-                if (UIInterfaceOrientationIsPortrait(UIApplication.shared.statusBarOrientation)) {
-                    contentInsets = UIEdgeInsetsMake(0.0, 0.0, (keyboardRect.size.height), 0.0);
+                if (UIApplication.shared.statusBarOrientation.isPortrait) {
+                    contentInsets = UIEdgeInsets.init(top: 0.0, left: 0.0, bottom: (keyboardRect.size.height), right: 0.0);
                 }
                 self?.tableView.contentInset = contentInsets;
                 self?.tableView.scrollIndicatorInsets = contentInsets;
@@ -301,7 +301,7 @@ extension SettingsViewController : UITextFieldDelegate {
                         animated:false)
                 }
             })
-        observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil,
+        observerTokens.append(nc.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil,
             queue: OperationQueue.main) { [weak self] note in
                 self?.tableView.contentInset = UIEdgeInsets.zero;
                 self?.tableView.scrollIndicatorInsets = UIEdgeInsets.zero;
@@ -332,7 +332,7 @@ private extension SettingsViewController {
         tableView.separatorInset = UIEdgeInsets.zero;
         tableView.estimatedRowHeight = 100
         tableView.estimatedSectionHeaderHeight = 22
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
 
         // Configure appearance
         tableView.backgroundColor = appearance.viewBackgroundColor

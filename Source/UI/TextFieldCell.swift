@@ -35,7 +35,7 @@ class TextFieldCell : SettingsCell {
     let textField = UITextField()
     weak var textFieldDelegate:UITextFieldDelegate? = nil
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }

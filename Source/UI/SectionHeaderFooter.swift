@@ -57,7 +57,7 @@ class SectionHeaderFooter : UITableViewHeaderFooterView {
     }
 
     func configureAppearance() {
-        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.footnote)
+        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.footnote)
         titleLabel.textColor = appearance?.cellTextColor
         contentView.backgroundColor = appearance?.viewBackgroundColor
     }

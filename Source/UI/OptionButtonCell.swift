@@ -32,7 +32,7 @@ class OptionsButtonCell : SettingsCell {
 
     let selectedOptionLabel = UILabel()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
@@ -81,6 +81,7 @@ class OptionsButtonCell : SettingsCell {
     override func setupViews() {
         super.setupViews()
 
+        
         textLabel?.setContentHuggingPriority(UILayoutPriority.defaultHigh,
             for: .horizontal)
         selectedOptionLabel.setContentCompressionResistancePriority(UILayoutPriority.defaultHigh,
