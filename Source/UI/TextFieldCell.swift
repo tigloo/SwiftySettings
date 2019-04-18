@@ -52,21 +52,15 @@ class TextFieldCell: SettingsCell {
             textField.translatesAutoresizingMaskIntoConstraints = false
             titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
+
             // Title UILabel/TextField UITextField Constraints
             contentView.addConstraints([NSLayoutConstraint(item: contentView,
                                                            attribute: .centerY,
                                                            relatedBy: .equal,
-                                                           toItem: titleLabel,
+                                                           toItem: textField,
                                                            attribute: .centerY,
                                                            multiplier: 1.0,
                                                            constant: 0.0),
-                                           NSLayoutConstraint(item: contentView,
-                                                              attribute: .centerY,
-                                                              relatedBy: .equal,
-                                                              toItem: textField,
-                                                              attribute: .centerY,
-                                                              multiplier: 1.0,
-                                                              constant: 0.0),
                                            NSLayoutConstraint(item: titleLabel,
                                                               attribute: .leading,
                                                               relatedBy: .equal,
@@ -74,6 +68,20 @@ class TextFieldCell: SettingsCell {
                                                               attribute: .leading,
                                                               multiplier: 1.0,
                                                               constant: 10),
+                                           NSLayoutConstraint(item: titleLabel,
+                                                              attribute: .width,
+                                                              relatedBy: .lessThanOrEqual,
+                                                              toItem: nil,
+                                                              attribute: .notAnAttribute,
+                                                              multiplier: 1.0,
+                                                              constant: ((titleLabel.superview?.frame.width)! / 4)),
+                                           NSLayoutConstraint(item: contentView,
+                                                              attribute: .centerY,
+                                                              relatedBy: .equal,
+                                                              toItem: titleLabel,
+                                                              attribute: .centerY,
+                                                              multiplier: 1.0,
+                                                              constant: 0.0),
                                            NSLayoutConstraint(item: textField,
                                                               attribute: .trailing,
                                                               relatedBy: .equal,
@@ -111,8 +119,12 @@ class TextFieldCell: SettingsCell {
         super.configureAppearance()
 
         textField.tintColor = appearance?.tintColor
-        textField.borderStyle = .roundedRect
+        textField.borderStyle = .none
+
         titleLabel.textColor = appearance?.cellTextColor
+        titleLabel.numberOfLines = 1;
+        titleLabel.minimumScaleFactor = 0.7;
+        titleLabel.adjustsFontSizeToFitWidth = true;
     }
 
     func load(_ item: TextField) {
@@ -121,6 +133,7 @@ class TextFieldCell: SettingsCell {
         self.titleLabel.text = item.title
         self.textField.text = item.value
         self.textField.isSecureTextEntry = item.secureTextEntry
+        self.textField.placeholder = item.placeholder
         self.textField.delegate = textFieldDelegate
 
         self.configureAppearance()

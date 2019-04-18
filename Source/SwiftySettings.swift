@@ -298,17 +298,19 @@ open class Slider : Item<Float> {
 open class TextField : Item<String> {
 
     let secureTextEntry: Bool
-
+    let placeholder: String
+    
     public init(key: String, title: String, secureTextEntry: Bool = false,
                 defaultValue: String = "",
-                valueChangedClosure: ValueChanged? = nil)
+                valueChangedClosure: ValueChanged? = nil, placeholder: String = "")
     {
         self.secureTextEntry = secureTextEntry
-
+        self.placeholder = placeholder
+        
         super.init(key: key, title: title, defaultValue: defaultValue, icon: nil,
                    valueChangedClosure: valueChangedClosure)
     }
-
+    
     open override var value: String {
         get {
             return (storage?[key] as String?) ?? defaultValue

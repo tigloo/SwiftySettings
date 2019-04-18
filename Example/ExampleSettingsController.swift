@@ -29,8 +29,8 @@ import UIKit
 import SwiftyUserDefaults
 import SwiftySettings
 
-class Storage : SettingsStorageType {
-    
+class Storage: SettingsStorageType {
+
     subscript(key: String) -> Bool? {
         get {
             return Defaults[key].bool
@@ -85,39 +85,40 @@ class ExampleSettingsController: SwiftySettingsViewController {
         /* Top Down settings */
         settings = SwiftySettings(storage: storage, title: "Intelligent Home") {
             [Section(title: "Electricity") {
-                [OptionsButton(key: "tariff", title: "Tariff") {
-                    [Option(title: "Day", optionId: 1),
-                     Option(title: "Night", optionId: 2),
-                     Option(title: "Mixed", optionId: 3)]
-                    },
-                Switch(key: "light-central", title: "Central Switch", icon: UIImage(named: "settings-light")),
-                Screen(title: "Livingroom") {
-                    [Section(title: "Lights") {
-                        [Switch(key: "light1", title: "Light 1"),
-                         Switch(key: "light2", title: "Light 2"),
-                         Slider(key: "brightness-1", title: "Brightness",
-                                minimumValueImage: UIImage(named: "slider-darker"),
-                                maximumValueImage: UIImage(named: "slider-brighter"),
-                                minimumValue: 0,
-                                maximumValue: 100)]
-                    }]
+                    [OptionsButton(key: "tariff", title: "Tariff") {
+                            [Option(title: "Day", optionId: 1),
+                                Option(title: "Night", optionId: 2),
+                                Option(title: "Mixed", optionId: 3)]
+                        },
+                        Switch(key: "light-central", title: "Central Switch", icon: UIImage(named: "settings-light")),
+                        Screen(title: "Livingroom") {
+                            [Section(title: "Lights") {
+                                    [Switch(key: "light1", title: "Light 1"),
+                                        Switch(key: "light2", title: "Light 2"),
+                                        Slider(key: "brightness-1", title: "Brightness",
+                                               minimumValueImage: UIImage(named: "slider-darker"),
+                                               maximumValueImage: UIImage(named: "slider-brighter"),
+                                               minimumValue: 0,
+                                               maximumValue: 100)]
+                                }]
+                        },
+                        Screen(title: "Bedroom") {
+                            [Section(title: "Lights", footer: "Manage lights in your bedroom") {
+                                    [Switch(key: "light3", title: "Light 1"),
+                                        Switch(key: "light4", title: "Light 2"),
+                                        Slider(key: "brightness-2", title: "Brightness")]
+                                }]
+                        }]
                 },
-                Screen(title: "Bedroom") {
-                    [Section(title: "Lights", footer: "Manage lights in your bedroom") {
-                        [Switch(key: "light3", title: "Light 1"),
-                         Switch(key: "light4", title: "Light 2"),
-                         Slider(key: "brightness-2", title: "Brightness")]
-                    }]
+                OptionsSection(key: "alarm-status", title: "Alarm") {
+                    [Option(title: "Armed", optionId: 1),
+                        Option(title: "Only ground floor", optionId: 2),
+                        Option(title: "Disarmed", optionId: 3)]
+                },
+                Section(title: "Administrator") {
+                    [TextField(key: "password", title: "Password", secureTextEntry: true),
+                     TextField(key: "username", title: "Username (plain)", placeholder: "Billy Bob")]
                 }]
-            },
-            OptionsSection(key: "alarm-status", title: "Alarm") {
-                [Option(title: "Armed", optionId: 1),
-                 Option(title: "Only ground floor", optionId: 2),
-                 Option(title: "Disarmed", optionId: 3)]
-            },
-            Section(title: "Administrator") {
-                [TextField(key: "password", title: "Password", secureTextEntry: true)]
-            }]
         }
     }
 
@@ -126,20 +127,20 @@ class ExampleSettingsController: SwiftySettingsViewController {
 
         let lightsSection1 = Section(title: "Lights")
         lightsSection1.with(Switch(key: "light1", title: "Light 1"))
-                      .with(Switch(key: "light2", title: "Light 2"))
-                      .with(Slider(key: "brightness-1", title: "Brightness",
-                                  minimumValueImage: UIImage(named: "slider-darker"),
-                                  maximumValueImage: UIImage(named: "slider-brighter"),
-                                  minimumValue: 0,
-                                  maximumValue: 100))
+            .with(Switch(key: "light2", title: "Light 2"))
+            .with(Slider(key: "brightness-1", title: "Brightness",
+                         minimumValueImage: UIImage(named: "slider-darker"),
+                         maximumValueImage: UIImage(named: "slider-brighter"),
+                         minimumValue: 0,
+                         maximumValue: 100))
 
         let livingroomScreen = Screen(title: "Livingroom")
         livingroomScreen.include(section: lightsSection1)
 
         let lightsSection2 = Section(title: "Lights", footer: "Manage lights in your bedrom")
         lightsSection2.with(Switch(key: "light3", title: "Light 1"))
-                      .with(Switch(key: "light4", title: "Light 2"))
-                      .with(Slider(key: "brightness-2", title: "Brightness"))
+            .with(Switch(key: "light4", title: "Light 2"))
+            .with(Slider(key: "brightness-2", title: "Brightness"))
 
         let bedromScreen = Screen(title: "Bedrom")
         bedromScreen.include(section: lightsSection2)
@@ -148,8 +149,8 @@ class ExampleSettingsController: SwiftySettingsViewController {
                                          title: "Tariff",
                                          icon: UIImage(named: "slider-brighter"))
         tariffOption.with(option: Option(title: "Day", optionId: 1))
-                    .with(option: Option(title: "Night", optionId: 2))
-                    .with(option: Option(title: "Mixed", optionId: 3))
+            .with(option: Option(title: "Night", optionId: 2))
+            .with(option: Option(title: "Mixed", optionId: 3))
 
 
         let alarmSection = OptionsSection(key: "alarm-status", title: "Alarm")
@@ -161,9 +162,9 @@ class ExampleSettingsController: SwiftySettingsViewController {
         electricitySection.with(tariffOption)
         electricitySection.with(Switch(key: "light-central",
                                        title: "Central Switch",
-                                       icon:UIImage(named: "settings-light")))
-                          .with(livingroomScreen)
-                          .with(bedromScreen)
+                                       icon: UIImage(named: "settings-light")))
+            .with(livingroomScreen)
+            .with(bedromScreen)
 
         let mainScreen = Screen(title: "Intelligent Home")
         mainScreen.include(section: electricitySection)
