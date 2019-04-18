@@ -314,6 +314,26 @@ open class TextField: Item<String> {
         super.init(key: key, title: title, defaultValue: defaultValue, icon: nil,
                    valueChangedClosure: valueChangedClosure)
     }
+    
+    public init(key: String, title: String, secureTextEntry: Bool = false, placeholder: String = "", autoCapitalize: Bool = true, keyboardType: UIKeyboardType = .default)
+    {
+        self.secureTextEntry = secureTextEntry
+        self.placeholder = placeholder
+        self.autoCapitalize = autoCapitalize
+        self.keyboardType = keyboardType
+        
+        super.init(key: key, title: title, defaultValue: "", icon: nil, valueChangedClosure: nil)
+    }
+    
+    public init(key: String, title: String, placeholder: String = "", autoCapitalize: Bool = true, keyboardType: UIKeyboardType = .default)
+    {
+        self.secureTextEntry = false
+        self.placeholder = placeholder
+        self.autoCapitalize = autoCapitalize
+        self.keyboardType = keyboardType
+        
+        super.init(key: key, title: title, defaultValue: "", icon: nil, valueChangedClosure: nil)
+    }
 
     open override var value: String {
         get {
