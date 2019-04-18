@@ -11,9 +11,9 @@ It helps to declare complex settings trees, provides a protocol to store and ret
 - [x] Supports various settings types (i.e. switch, slider, single choice)
 
 ## Requirements
-- Swift 2
+- Swift 4
 - iOS 8.0+ (iPhone and iPad compatible)
-- Xcode 7
+- Xcode 9
 
 ## TL;DR
 
