@@ -30,7 +30,7 @@ import Foundation
 import UIKit
 
 public protocol SettingsStorageType {
-    
+
     subscript(key: String) -> Bool? { get set }
     subscript(key: String) -> Float? { get set }
     subscript(key: String) -> Int? { get set }
@@ -51,7 +51,7 @@ open class TitledNode {
     }
 }
 
-open class Item<T> : TitledNode
+open class Item<T>: TitledNode
 {
     public let key: String
     public let defaultValue: T
@@ -74,7 +74,7 @@ open class Item<T> : TitledNode
 
 // MARK: - Sections
 
-open class Section : TitledNode {
+open class Section: TitledNode {
 
     open var items: [TitledNode] = []
     open var footer: String?
@@ -113,7 +113,7 @@ protocol OptionsContainerType: class {
     }
 }
 
-open class OptionsSection : Section, OptionsContainerType {
+open class OptionsSection: Section, OptionsContainerType {
 
     let key: String
 
@@ -141,7 +141,7 @@ open class OptionsSection : Section, OptionsContainerType {
 
 // MARK: - Settings
 
-open class OptionsButton : TitledNode, OptionsContainerType {
+open class OptionsButton: TitledNode, OptionsContainerType {
     var options: [Option] = []
     let key: String
 
@@ -161,8 +161,8 @@ open class OptionsButton : TitledNode, OptionsContainerType {
             options = closure()
         }
         for option in options {
-                option.navigateBack = true
-                option.container = self
+            option.navigateBack = true
+            option.container = self
         }
     }
 
@@ -180,7 +180,7 @@ open class OptionsButton : TitledNode, OptionsContainerType {
     }
 }
 
-open class Screen : TitledNode {
+open class Screen: TitledNode {
     open var sections: [Section] = []
 
     public init(title: String, icon: UIImage? = nil, sectionsClosure: (() -> [Section])? = nil) {
@@ -204,10 +204,10 @@ open class Screen : TitledNode {
     }
 }
 
-open class Switch : Item<Bool> {
+open class Switch: Item<Bool> {
     public override init(key: String, title: String, defaultValue: Bool = false,
-                        icon: UIImage? = nil,
-                        valueChangedClosure: ValueChanged? = nil) {
+                         icon: UIImage? = nil,
+                         valueChangedClosure: ValueChanged? = nil) {
         super.init(key: key, title: title, defaultValue: defaultValue, icon: icon,
                    valueChangedClosure: valueChangedClosure)
     }
@@ -223,7 +223,7 @@ open class Switch : Item<Bool> {
     }
 }
 
-open class Option : Item<Int> {
+open class Option: Item<Int> {
 
     let optionId: Int
     weak var container: OptionsContainerType!
@@ -260,7 +260,7 @@ open class Option : Item<Int> {
     }
 }
 
-open class Slider : Item<Float> {
+open class Slider: Item<Float> {
 
     var minimumValueImage: UIImage?
     var maximumValueImage: UIImage?
@@ -295,22 +295,22 @@ open class Slider : Item<Float> {
     }
 }
 
-open class TextField : Item<String> {
+open class TextField: Item<String> {
 
     let secureTextEntry: Bool
     let placeholder: String
-    
+
     public init(key: String, title: String, secureTextEntry: Bool = false,
                 defaultValue: String = "",
                 valueChangedClosure: ValueChanged? = nil, placeholder: String = "")
     {
         self.secureTextEntry = secureTextEntry
         self.placeholder = placeholder
-        
+
         super.init(key: key, title: title, defaultValue: defaultValue, icon: nil,
                    valueChangedClosure: valueChangedClosure)
     }
-    
+
     open override var value: String {
         get {
             return (storage?[key] as String?) ?? defaultValue

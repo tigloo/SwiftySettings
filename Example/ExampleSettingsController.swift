@@ -72,7 +72,7 @@ class ExampleSettingsController: SwiftySettingsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        loadSettingsTopDown()
+        displaySettings()
     }
 
     override func didReceiveMemoryWarning() {
@@ -171,6 +171,28 @@ class ExampleSettingsController: SwiftySettingsViewController {
         mainScreen.include(section: alarmSection)
 
         settings = SwiftySettings(storage: storage, main: mainScreen)
+    }
+    
+    func displaySettings() {
+        settings = SwiftySettings(storage: storage, title: "Settings") {
+            [
+                Section(title: "Time Clock") {
+                    [
+                        TextField(key: "username", title: "Username", secureTextEntry: false),
+                        TextField(key: "password", title: "Password", secureTextEntry: true),
+                        TextField(key: "ipAddress", title: "URL", secureTextEntry: false)
+                    ]
+                },
+                Section(title: "VPN") {
+                    [
+                        Switch(key: "useVPN", title: "Use VPN?"),
+                        TextField(key: "vpnUsername", title: "Username", secureTextEntry: false),
+                        TextField(key: "vpnPassword", title: "Password", secureTextEntry: true),
+                        TextField(key: "vpnAddress", title: "URL", secureTextEntry: false)
+                    ]
+                }
+            ]
+        }
     }
 }
 
