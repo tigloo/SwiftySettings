@@ -4,10 +4,10 @@ inhibit_all_warnings!
 use_frameworks!
 
 target :"Example" do
-    pod 'SwiftyUserDefaults', '~> 3.0.0'
+    pod 'SwiftyUserDefaults', '~> 3.0.1'
 end
 
 target :"Tests" do
-    pod 'Quick', '~> 0.10.0'
-    pod 'Nimble', '~> 5.1.1'
+    pod 'Quick', '~> 2.0.0'
+    pod 'Nimble', '~> 8.0.1'
 end

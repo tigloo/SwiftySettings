@@ -28,12 +28,12 @@
 import Foundation
 import UIKit
 
-class TextFieldCell : SettingsCell {
+class TextFieldCell: SettingsCell {
 
     var item: TextField!
     let titleLabel = UILabel()
     let textField = UITextField()
-    weak var textFieldDelegate:UITextFieldDelegate? = nil
+    weak var textFieldDelegate: UITextFieldDelegate? = nil
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,60 +52,42 @@ class TextFieldCell : SettingsCell {
             textField.translatesAutoresizingMaskIntoConstraints = false
             titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-            // Title UILabel
-            contentView.addConstraints(
-                [NSLayoutConstraint(item: titleLabel,
-                                    attribute: .leading,
-                                    relatedBy: .equal,
-                                    toItem: contentView,
-                                    attribute: .leading,
-                                    multiplier: 1.0,
-                                    constant: 10),
-                 NSLayoutConstraint(item: titleLabel,
-                                    attribute: .top,
-                                    relatedBy: .equal,
-                                    toItem: contentView,
-                                    attribute: .top,
-                                    multiplier: 1.0,
-                                    constant: 5),
-                ])
-            // UITextField
-            contentView.addConstraints(
-                [NSLayoutConstraint(item: textField,
-                                    attribute: .width,
-                                    relatedBy: .equal,
-                                    toItem: contentView,
-                                    attribute: .width,
-                                    multiplier: 0.9,
-                                    constant: 0),
-                 NSLayoutConstraint(item: contentView,
-                                    attribute: .centerX,
-                                    relatedBy: .equal,
-                                    toItem: textField,
-                                    attribute: .centerX,
-                                    multiplier: 1.0,
-                                    constant: 0),
-                 NSLayoutConstraint(item: titleLabel,
-                                    attribute: .bottom,
-                                    relatedBy: .equal,
-                                    toItem: textField,
-                                    attribute: .top,
-                                    multiplier: 1.0,
-                                    constant: -10),
-                 NSLayoutConstraint(item: contentView,
-                                    attribute: .bottom,
-                                    relatedBy: .equal,
-                                    toItem: textField,
-                                    attribute: .bottom,
-                                    multiplier: 1.0,
-                                    constant: 15),
-                 NSLayoutConstraint(item: textField,
-                                    attribute: .height,
-                                    relatedBy: .equal,
-                                    toItem: nil,
-                                    attribute: .notAnAttribute,
-                                    multiplier: 1.0,
-                                    constant: 30)])
+            // Title UILabel/TextField UITextField Constraints
+            contentView.addConstraints([NSLayoutConstraint(item: contentView,
+                                                           attribute: .centerY,
+                                                           relatedBy: .equal,
+                                                           toItem: titleLabel,
+                                                           attribute: .centerY,
+                                                           multiplier: 1.0,
+                                                           constant: 0.0),
+                                           NSLayoutConstraint(item: contentView,
+                                                              attribute: .centerY,
+                                                              relatedBy: .equal,
+                                                              toItem: textField,
+                                                              attribute: .centerY,
+                                                              multiplier: 1.0,
+                                                              constant: 0.0),
+                                           NSLayoutConstraint(item: titleLabel,
+                                                              attribute: .leading,
+                                                              relatedBy: .equal,
+                                                              toItem: contentView,
+                                                              attribute: .leading,
+                                                              multiplier: 1.0,
+                                                              constant: 10),
+                                           NSLayoutConstraint(item: textField,
+                                                              attribute: .trailing,
+                                                              relatedBy: .equal,
+                                                              toItem: contentView,
+                                                              attribute: .trailing,
+                                                              multiplier: 1.0,
+                                                              constant: -10),
+                                           NSLayoutConstraint(item: textField,
+                                                              attribute: .leading,
+                                                              relatedBy: .equal,
+                                                              toItem: titleLabel,
+                                                              attribute: .trailing,
+                                                              multiplier: 1.0,
+                                                              constant: 10)])
 
             didSetupConstraints = true
         }
