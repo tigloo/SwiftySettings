@@ -132,6 +132,9 @@ class TextFieldCell: SettingsCell {
 
         self.titleLabel.text = item.title
         self.textField.text = item.value
+        self.textField.keyboardType = item.keyboardType
+        self.textField.autocapitalizationType = item.autoCapitalize ? .allCharacters : .none
+        self.textField.autocorrectionType = item.autoCapitalize ? .yes : .no
         self.textField.isSecureTextEntry = item.secureTextEntry
         self.textField.placeholder = item.placeholder
         self.textField.delegate = textFieldDelegate

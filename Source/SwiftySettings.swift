@@ -299,13 +299,17 @@ open class TextField: Item<String> {
 
     let secureTextEntry: Bool
     let placeholder: String
+    let keyboardType: UIKeyboardType
+    let autoCapitalize: Bool
 
     public init(key: String, title: String, secureTextEntry: Bool = false,
                 defaultValue: String = "",
-                valueChangedClosure: ValueChanged? = nil, placeholder: String = "")
+                valueChangedClosure: ValueChanged? = nil, placeholder: String = "", autoCapitalize: Bool = true, keyboardType: UIKeyboardType = .default)
     {
         self.secureTextEntry = secureTextEntry
         self.placeholder = placeholder
+        self.autoCapitalize = autoCapitalize
+        self.keyboardType = keyboardType
 
         super.init(key: key, title: title, defaultValue: defaultValue, icon: nil,
                    valueChangedClosure: valueChangedClosure)
