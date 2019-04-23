@@ -28,13 +28,13 @@
 
 import Foundation
 import UIKit
+import SwiftyUserDefaults
 
 public protocol SettingsStorageType {
-
-    subscript(key: String) -> Bool? { get set }
-    subscript(key: String) -> Float? { get set }
-    subscript(key: String) -> Int? { get set }
-    subscript(key: String) -> String? { get set }
+    subscript(key: DefaultsKey<Bool?>) -> Bool? { get set }
+    subscript(key: DefaultsKey<Double?>) -> Double? { get set }
+    subscript(key: DefaultsKey<Int?>) -> Int? { get set }
+    subscript(key: DefaultsKey<String?>) -> String? { get set }
 }
 
 
@@ -214,11 +214,17 @@ open class Switch: Item<Bool> {
 
     open override var value: Bool {
         get {
-            return (storage?[key] as Bool?) ?? defaultValue
+            if let storage = storage,
+                let value = storage[DefaultsKey<Bool?>(key, defaultValue: defaultValue)] {
+                return value
+            }
+            return defaultValue
         }
         set {
-            storage?[key] = newValue
-            valueChanged?(key, newValue)
+            if var storage = storage{
+                storage[DefaultsKey<Bool?>(key, defaultValue: defaultValue)] = newValue
+                valueChanged?(key, newValue)
+            }
         }
     }
 }
@@ -251,28 +257,34 @@ open class Option: Item<Int> {
 
     open override var value: Int {
         get {
-            return (storage?[container.key] as Int?) ?? defaultValue
+            if let storage = storage,
+                let value = storage[DefaultsKey<Int?>(key, defaultValue: defaultValue)] {
+                return value
+            }
+            return defaultValue
         }
         set {
-            storage?[container.key] = newValue
-            valueChanged?(container.key, newValue)
+            if var storage = storage{
+                storage[DefaultsKey<Int?>(key, defaultValue: defaultValue)] = newValue
+                valueChanged?(key, newValue)
+            }
         }
     }
 }
 
-open class Slider: Item<Float> {
+open class Slider: Item<Double> {
 
     var minimumValueImage: UIImage?
     var maximumValueImage: UIImage?
-    var minimumValue: Float
-    var maximumValue: Float
+    var minimumValue: Double
+    var maximumValue: Double
 
-    public init(key: String, title: String, defaultValue: Float = 0,
+    public init(key: String, title: String, defaultValue: Double = 0,
                 icon: UIImage? = nil,
                 minimumValueImage: UIImage? = nil,
                 maximumValueImage: UIImage? = nil,
-                minimumValue: Float = 0,
-                maximumValue: Float = 100,
+                minimumValue: Double = 0,
+                maximumValue: Double = 100,
                 valueChangedClosure: ValueChanged? = nil)
     {
         self.minimumValue = minimumValue
@@ -284,13 +296,19 @@ open class Slider: Item<Float> {
                    valueChangedClosure: valueChangedClosure)
     }
 
-    open override var value: Float {
+    open override var value: Double {
         get {
-            return (storage?[key] as Float?) ?? defaultValue
+            if let storage = storage,
+                let value = storage[DefaultsKey<Double?>(key, defaultValue: defaultValue)] {
+                return value
+            }
+            return defaultValue
         }
         set {
-            storage?[key] = newValue
-            valueChanged?(key, newValue)
+            if var storage = storage{
+                storage[DefaultsKey<Double?>(key, defaultValue: defaultValue)] = newValue
+                valueChanged?(key, newValue)
+            }
         }
     }
 }
@@ -314,34 +332,40 @@ open class TextField: Item<String> {
         super.init(key: key, title: title, defaultValue: defaultValue, icon: nil,
                    valueChangedClosure: valueChangedClosure)
     }
-    
+
     public init(key: String, title: String, secureTextEntry: Bool = false, placeholder: String = "", autoCapitalize: Bool = true, keyboardType: UIKeyboardType = .default)
     {
         self.secureTextEntry = secureTextEntry
         self.placeholder = placeholder
         self.autoCapitalize = autoCapitalize
         self.keyboardType = keyboardType
-        
+
         super.init(key: key, title: title, defaultValue: "", icon: nil, valueChangedClosure: nil)
     }
-    
+
     public init(key: String, title: String, placeholder: String = "", autoCapitalize: Bool = true, keyboardType: UIKeyboardType = .default)
     {
         self.secureTextEntry = false
         self.placeholder = placeholder
         self.autoCapitalize = autoCapitalize
         self.keyboardType = keyboardType
-        
+
         super.init(key: key, title: title, defaultValue: "", icon: nil, valueChangedClosure: nil)
     }
 
     open override var value: String {
         get {
-            return (storage?[key] as String?) ?? defaultValue
+            if let storage = storage,
+                let value = storage[DefaultsKey<String?>(key, defaultValue: defaultValue)] {
+                return value
+            }
+            return defaultValue
         }
         set {
-            storage?[key] = newValue
-            valueChanged?(key, newValue)
+            if var storage = storage{
+                storage[DefaultsKey<String?>(key, defaultValue: defaultValue)] = newValue
+                valueChanged?(key, newValue)
+            }
         }
     }
 }

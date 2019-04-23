@@ -1,24 +1,33 @@
 PODS:
   - Nimble (8.0.1)
   - Quick (2.0.0)
-  - SwiftyUserDefaults (3.0.1)
+  - SwiftyUserDefaults (4.0.0-beta.2)
 
 DEPENDENCIES:
   - Nimble (~> 8.0.1)
   - Quick (~> 2.0.0)
-  - SwiftyUserDefaults (~> 3.0.1)
+  - SwiftyUserDefaults (from `https://github.com/radex/SwiftyUserDefaults/`, tag `4.0.0-beta.2`)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Nimble
     - Quick
-    - SwiftyUserDefaults
+
+EXTERNAL SOURCES:
+  SwiftyUserDefaults:
+    :git: https://github.com/radex/SwiftyUserDefaults/
+    :tag: 4.0.0-beta.2
+
+CHECKOUT OPTIONS:
+  SwiftyUserDefaults:
+    :git: https://github.com/radex/SwiftyUserDefaults/
+    :tag: 4.0.0-beta.2
 
 SPEC CHECKSUMS:
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   Quick: ce1276c7c27ba2da3cb2fd0cde053c3648b3b22d
-  SwiftyUserDefaults: 3d273b1739b68ada3145dc754a70ec775bc5c8be
+  SwiftyUserDefaults: 0a9740c9cd650a695fd9d547d4f01f8b8df6ddc1
 
-PODFILE CHECKSUM: 8591c3c687ba6705d2c00cd1162af6a8bf27b1b5
+PODFILE CHECKSUM: ad424fa8762c2989e6fdbe0fae337a5bf43b5783
 
 COCOAPODS: 1.7.0.beta.3

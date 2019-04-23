@@ -26,53 +26,15 @@
 //
 
 import UIKit
-import SwiftyUserDefaults
 import SwiftySettings
 
-class Storage: SettingsStorageType {
-
-    subscript(key: String) -> Bool? {
-        get {
-            return Defaults[key].bool
-        }
-        set {
-            Defaults[key] = newValue
-        }
-    }
-    subscript(key: String) -> Float? {
-        get {
-            return Float(Defaults[key].doubleValue)
-        }
-        set {
-            Defaults[key] = newValue
-        }
-    }
-    subscript(key: String) -> Int? {
-        get {
-            return Defaults[key].int
-        }
-        set {
-            Defaults[key] = newValue
-        }
-    }
-    subscript(key: String) -> String? {
-        get {
-            return Defaults[key].string
-        }
-        set {
-            Defaults[key] = newValue
-        }
-    }
-}
-
-class ExampleSettingsController: SwiftySettingsViewController {
-
+class ExampleSettingsOneViewController: SwiftySettingsViewController {
     var storage = Storage()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        displaySettings()
+        loadSettingsTopDown()
     }
 
     override func didReceiveMemoryWarning() {
@@ -117,7 +79,7 @@ class ExampleSettingsController: SwiftySettingsViewController {
                 },
                 Section(title: "Administrator") {
                     [TextField(key: "password", title: "Password", secureTextEntry: true),
-                     TextField(key: "username", title: "Username (plain)", placeholder: "Billy Bob")]
+                        TextField(key: "username", title: "Username (plain)", placeholder: "Billy Bob")]
                 }]
         }
     }
@@ -171,28 +133,6 @@ class ExampleSettingsController: SwiftySettingsViewController {
         mainScreen.include(section: alarmSection)
 
         settings = SwiftySettings(storage: storage, main: mainScreen)
-    }
-    
-    func displaySettings() {
-        settings = SwiftySettings(storage: storage, title: "Settings") {
-            [
-                Section(title: "Time Clock") {
-                    [
-                        TextField(key: "username", title: "Username", secureTextEntry: false),
-                        TextField(key: "password", title: "Password", secureTextEntry: true),
-                        TextField(key: "ipAddress", title: "URL", secureTextEntry: false)
-                    ]
-                },
-                Section(title: "VPN") {
-                    [
-                        Switch(key: "useVPN", title: "Use VPN?"),
-                        TextField(key: "vpnUsername", title: "Username", secureTextEntry: false),
-                        TextField(key: "vpnPassword", title: "Password", secureTextEntry: true),
-                        TextField(key: "vpnAddress", title: "URL", secureTextEntry: false)
-                    ]
-                }
-            ]
-        }
     }
 }
 

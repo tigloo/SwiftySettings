@@ -65,4 +65,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+// MARK: SettingsStorageType
 
+class Storage: SettingsStorageType {
+    subscript(key: DefaultsKey<Bool?>) -> Bool? {
+        get {
+            return Defaults[key]
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
+        }
+    }
+    
+    subscript(key: DefaultsKey<Double?>) -> Double? {
+        get {
+            return Defaults[key]
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
+        }
+    }
+    
+    subscript(key: DefaultsKey<Int?>) -> Int? {
+        get {
+            return Defaults[key]
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
+        }
+    }
+    
+    subscript(key: DefaultsKey<String?>) -> String? {
+        get {
+            return Defaults[key]
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
+        }
+    }
+}
