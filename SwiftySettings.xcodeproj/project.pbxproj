@@ -108,7 +108,7 @@
 		F18627471B74F789004E5529 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Example/Assets.xcassets; sourceTree = "<group>"; };
 		F186274A1B74F789004E5529 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F186274D1B74F789004E5529 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Example/Info.plist; sourceTree = "<group>"; };
-		F186274E1B74F789004E5529 /* ExampleSettingsOneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExampleSettingsOneViewController.swift; path = Example/ExampleSettingsOneViewController.swift; sourceTree = "<group>"; };
+		F186274E1B74F789004E5529 /* ExampleSettingsOneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleSettingsOneViewController.swift; sourceTree = "<group>"; };
 		F1E045681B78F69900819DCD /* SwiftySettings.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftySettings.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1E045751B78F71200819DCD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; sourceTree = "<group>"; };
 		F1ED23731B78F36100054FFB /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,6 +158,15 @@
 				7BA705CC77295E88DA956785 /* Pods_SwiftySettings.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8AF718EF226FA12A00DBD7AD /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F186274E1B74F789004E5529 /* ExampleSettingsOneViewController.swift */,
+				8AF718ED226FA06A00DBD7AD /* ExampleSettingsTwoViewController.swift */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		AA6074F4CF31DAC417A9C145 /* Pods */ = {
@@ -249,12 +258,11 @@
 		F186272F1B74D1D0004E5529 /* Example */ = {
 			isa = PBXGroup;
 			children = (
-				F18627471B74F789004E5529 /* Assets.xcassets */,
-				F18627481B74F789004E5529 /* Base.lproj */,
-				F186274D1B74F789004E5529 /* Info.plist */,
 				F18627461B74F789004E5529 /* AppDelegate.swift */,
-				F186274E1B74F789004E5529 /* ExampleSettingsOneViewController.swift */,
-				8AF718ED226FA06A00DBD7AD /* ExampleSettingsTwoViewController.swift */,
+				F18627471B74F789004E5529 /* Assets.xcassets */,
+				F186274D1B74F789004E5529 /* Info.plist */,
+				F18627481B74F789004E5529 /* Base.lproj */,
+				8AF718EF226FA12A00DBD7AD /* View Controllers */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -783,7 +791,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pl.codica.Examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -800,7 +808,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = BrandAsset;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "$(SRCROOT)/Example/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = pl.codica.Examples;
 				PRODUCT_NAME = "$(TARGET_NAME)";
