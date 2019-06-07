@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'leetal-SwiftySettings'
-  s.version = '1.0.5'
+  s.version = '1.1.0'
   s.license = 'MIT'
   s.summary = 'Declarative in-app settings stack in Swift'
   s.homepage = 'https://github.com/leetal/SwiftySettings'
@@ -9,6 +9,6 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '8.0'
   s.source_files = 'Source/**/*.swift'
   s.requires_arc = true
-  s.swift_version = '4.2'
+  s.swift_version = '5.0'
   s.dependency "SwiftyUserDefaults" , '4.0.0'
 end
