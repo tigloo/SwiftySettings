@@ -71,7 +71,8 @@ open class SwiftySettingsViewController : UITableViewController {
     }
 
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.appearance.statusBarStyle
+        let style = self.appearance.statusBarStyle
+        return style
     }
 
     public convenience init(settings: SwiftySettings, appearance: Appearance) {
@@ -88,19 +89,16 @@ open class SwiftySettingsViewController : UITableViewController {
 
     private override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        commonInit()
     }
     
-    override open func awakeFromNib() {
-        super.awakeFromNib()
-        setupDefaultAppearance()
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
     }
 
     deinit {
         observerTokens.removeAll()
-    }
-
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
     }
 
     override open func viewDidLoad() {
@@ -410,6 +408,10 @@ extension SwiftySettingsViewController {
 // MARK: Keyboard handling
 
 extension SwiftySettingsViewController : UITextFieldDelegate {
+    
+    func commonInit() {
+        setupDefaultAppearance()
+    }
 
     func setupKeyboardHandling() {
 

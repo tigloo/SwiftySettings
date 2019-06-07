@@ -78,6 +78,12 @@ class Storage: SettingsStorageType {
 class ExampleSettingsController: SwiftySettingsViewController {
 
     var storage = Storage()
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        statusBarStyle = .default
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -97,7 +97,7 @@ class OptionsButtonCell : SettingsCell {
     override func configureAppearance(_ item: TitledNode) {
         super.configureAppearance(item)
         selectedOptionLabel.textColor = self.appearance?.textAppearance?.secondaryTextColor
-        selectedOptionLabel.font = self.appearance?.textAppearance?.secondaryTextFont
+        selectedOptionLabel.font = self.appearance?.textAppearance?.font
         selectedOptionLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
         selectedOptionLabel.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(selectedOptionLabel)
