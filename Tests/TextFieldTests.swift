@@ -37,9 +37,10 @@ class TextFieldTests: QuickSpec {
 
             it("should trigger ValueChanged when value changes") {
                 let textKey = "key1"
-
-                triggersChangedValueFor(item: TextField(key: textKey,
-                                        title: "Title 1"),
+                let textField1 = TextField(key: textKey,
+                                           title: "Title 1")
+                textField1.storage = StorageStub()
+                triggersChangedValueFor(item: textField1,
                                         assertedKey: textKey,
                                         assertedValue: "password")
             }

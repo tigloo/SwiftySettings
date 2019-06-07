@@ -27,9 +27,9 @@
 //
 import Quick
 import Nimble
+import SwiftyUserDefaults
 
 @testable import SwiftySettings
-
 
 class SwiftySettingsTests: QuickSpec {
     override func spec() {
@@ -40,15 +40,15 @@ class SwiftySettingsTests: QuickSpec {
             beforeEach {
                 settings = SwiftySettings(storage: StorageStub(), title: "Title") {
                     [Section(title: "Section 1") {
-                        [Switch(key: "key1", title: "Title 1"),
-                         Slider(key: "key2", title: "Title 2")]
+                        [Switch(key: DefaultsKeys.key1._key, title: "Title 1"),
+                         Slider(key: DefaultsKeys.key2._key, title: "Title 2")]
                     },
-                    OptionsSection(key: "key3", title: "Section 2") {
+                    OptionsSection(key: DefaultsKeys.key3._key, title: "Section 2") {
                         [Option(title: "Option 1", optionId: 0),
                          Option(title: "Option 2", optionId: 1)]
                     },
                     Section(title: "Section 3") {
-                        [OptionsButton(key: "key4", title: "Options Button") {
+                        [OptionsButton(key: DefaultsKeys.key4._key, title: "Options Button") {
                             [Option(title: "Option 1", optionId: 0),
                              Option(title: "Option 2", optionId: 1)]
                         }]
@@ -60,21 +60,21 @@ class SwiftySettingsTests: QuickSpec {
             it("should store changed Switch value") {
                 let s = settings.main.sections[0].items[0] as! Switch
                 s.value = true
-                expect(settings.storage["key1"]).to(beTrue())
+                expect(settings.storage[DefaultsKeys.key1]).to(beTrue())
             }
 
             it("should store changed Slider value") {
                 let magicNumber: Float = 98.9
                 let s = settings.main.sections[0].items[1] as! Slider
                 s.value = magicNumber
-                expect(settings.storage["key2"]).to(equal(magicNumber))
+                expect(settings.storage[DefaultsKeys.key2]).to(equal(Double(magicNumber)))
             }
 
             it("should store changed Option from OptionsSection") {
                 let optionId = 1
                 let s = settings.main.sections[1].items[optionId] as! Option
                 s.selected = true
-                expect(settings.storage["key3"]).to(equal(optionId))
+                expect(settings.storage[DefaultsKeys.key3]).to(equal(optionId))
             }
 
             it("should store changed Option from OptionsButton") {
@@ -86,7 +86,7 @@ class SwiftySettingsTests: QuickSpec {
                 }.first
 
                 buttonToSelect!.selected = true
-                expect(settings.storage["key4"]).to(equal(optionId))
+                expect(settings.storage[DefaultsKeys.key4]).to(equal(optionId))
             }
         }
     }

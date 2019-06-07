@@ -29,90 +29,26 @@ import Foundation
 import UIKit
 
 open class SwiftySettingsViewController : UITableViewController {
-
-    @IBInspectable open var viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
-    @IBInspectable open var cellBackgroundColor: UIColor? = UIColor.white
-    @IBInspectable open var cellTextColor: UIColor? = UIColor.black
-    @IBInspectable open var cellSecondaryTextColor: UIColor? = UIColor.darkGray
-    @IBInspectable open var tintColor: UIColor? = nil
-    @IBInspectable open var textInputColor: UIColor? = UIColor.gray
-    @IBInspectable open var separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray()
-    @IBInspectable open var selectionColor: UIColor? = UIColor.lightGray
-    @IBInspectable open var forceRoundedCorners: Bool = false
-    @IBInspectable open var headerFooterCellTextColor: UIColor? = UIColor.gray
-    @IBInspectable open var hideFooter: Bool = true
-    @IBInspectable open var enableAccessibility: Bool = true
-
-    public struct Appearance {
-        let viewBackgroundColor: UIColor?
-        let cellBackgroundColor: UIColor?
-        let cellTextColor: UIColor?
-        let cellSecondaryTextColor: UIColor?
-        let tintColor: UIColor?
-        let textInputColor: UIColor?
-        let separatorColor: UIColor?
-        let selectionColor: UIColor?
-        let forceRoundedCorners: Bool
-        let hideFooter: Bool
-        var headerFooterCellTextColor: UIColor?
-        var statusBarStyle: UIStatusBarStyle
-        let enableAccessibility: Bool
-
-        init(viewBackgroundColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
-             cellBackgroundColor: UIColor? = UIColor.white,
-             cellTextColor: UIColor? = UIColor.black,
-             cellSecondaryTextColor: UIColor? = UIColor.darkGray,
-             tintColor: UIColor? = nil,
-             textInputColor: UIColor? = UIColor.gray,
-             separatorColor: UIColor? = UIColor.swiftySettingsDefaultHeaderGray(),
-             selectionColor: UIColor? = UIColor.lightGray,
-             forceRoundedCorners: Bool = false,
-             hideFooter: Bool = true,
-             enableAccessibility: Bool = false,
-             headerFooterCellTextColor: UIColor? = UIColor.darkText,
-             statusBarStyle: UIStatusBarStyle = .default) {
-            self.viewBackgroundColor = viewBackgroundColor
-            self.cellBackgroundColor = cellBackgroundColor
-            self.cellTextColor = cellTextColor
-            self.cellSecondaryTextColor = cellSecondaryTextColor
-            self.tintColor = tintColor
-            self.textInputColor = textInputColor
-            self.separatorColor = separatorColor
-            self.selectionColor = selectionColor
-            self.forceRoundedCorners = forceRoundedCorners
-            self.hideFooter = hideFooter
-            self.headerFooterCellTextColor = headerFooterCellTextColor
-            self.statusBarStyle = statusBarStyle
-            self.enableAccessibility = enableAccessibility
-        }
-
-        init(splitVC: SwiftySettingsViewController) {
-            self.viewBackgroundColor = splitVC.viewBackgroundColor
-            self.cellBackgroundColor = splitVC.cellBackgroundColor
-            self.cellTextColor = splitVC.cellTextColor
-            self.cellSecondaryTextColor = splitVC.cellSecondaryTextColor
-            self.tintColor = splitVC.tintColor
-            self.textInputColor = splitVC.textInputColor
-            self.separatorColor = splitVC.separatorColor
-            self.selectionColor = splitVC.selectionColor
-            self.forceRoundedCorners = splitVC.forceRoundedCorners
-            self.hideFooter = splitVC.hideFooter
-            self.enableAccessibility = splitVC.enableAccessibility
-            self.headerFooterCellTextColor = splitVC.headerFooterCellTextColor
-            self.statusBarStyle = splitVC.statusBarStyle
-        }
-    }
-
+    
     open var statusBarStyle: UIStatusBarStyle = .default {
         didSet {
-            self.appearance?.statusBarStyle = statusBarStyle
+            self.appearance.withStatusBarStyle(statusBarStyle)
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }
 
     open var settings: SwiftySettings! {
-        didSet{
+        didSet {
             self.load(settings.main)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    open var appearance: Appearance! {
+        didSet {
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -120,36 +56,43 @@ open class SwiftySettingsViewController : UITableViewController {
     }
 
     fileprivate var sections: [Section] = []
-    fileprivate var appearance: Appearance?
     fileprivate var storedContentInset = UIEdgeInsets.zero
     fileprivate var observerTokens: [NSObjectProtocol] = []
-    fileprivate var editingIndexPath: IndexPath? = nil
-    fileprivate var currentFirstResponderTextField: UITextField? = nil
+    fileprivate var screenTriggeredFromIndexPath: IndexPath?
+    fileprivate var editingIndexPath: IndexPath?
+    fileprivate var lastVisibleRow: IndexPath?
+    fileprivate var currentFirstResponderTextField: UITextField?
 
     var shouldDecorateWithRoundCorners: Bool {
-        if self.forceRoundedCorners {
+        if self.appearance.tableViewAppearance?.forceRoundedCorners ?? false {
             return true
         }
         return false
     }
 
     override open var preferredStatusBarStyle: UIStatusBarStyle {
-        return self.appearance?.statusBarStyle ?? .default
+        return self.appearance.statusBarStyle
     }
 
-    public convenience init(settings: SwiftySettings) {
+    public convenience init(settings: SwiftySettings, appearance: Appearance) {
         self.init(nibName: nil, bundle: nil)
         self.settings = settings
+        self.appearance = appearance
     }
 
-    public convenience init (appearance: Appearance, screen: Screen) {
+    public convenience init(appearance: Appearance, screen: Screen) {
         self.init(nibName: nil, bundle: nil)
         self.appearance = appearance
         self.load(screen)
     }
 
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    private override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    override open func awakeFromNib() {
+        super.awakeFromNib()
+        setupDefaultAppearance()
     }
 
     deinit {
@@ -164,24 +107,41 @@ open class SwiftySettingsViewController : UITableViewController {
         super.viewDidLoad()
 
         self.isAccessibilityElement = false
-
-        setupAppearence()
+        
         setupTableView()
         setupKeyboardHandling()
     }
-
+    
     override open func viewWillAppear(_ animated: Bool) {
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
+        super.viewWillAppear(animated)
+        
+        // If coming back from a screen, make sure to update the cell that "triggered" the presentation of the screen
+        if let screenTriggeredFromIndexPath = self.screenTriggeredFromIndexPath {
+            self.tableView.reloadRows(at: [screenTriggeredFromIndexPath], with: .automatic)
+            self.screenTriggeredFromIndexPath = nil
         }
     }
 
     override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
+        
         if let responder = self.currentFirstResponderTextField {
             responder.resignFirstResponder()
             self.currentFirstResponderTextField = nil
         }
+    }
+    
+    override open func willTransition(to newCollection: UITraitCollection, with coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animate(alongsideTransition: { context in
+            // Save the visible row position
+            self.lastVisibleRow = self.tableView.indexPathsForVisibleRows!.last
+            context.viewController(forKey: UITransitionContextViewControllerKey.from)
+        }, completion: { context in
+            // Scroll to the saved position prior to screen rotate
+            if let lastVisibleRow = self.lastVisibleRow {
+                self.tableView.scrollToRow(at: lastVisibleRow, at: .middle, animated: false)
+            }
+        })
     }
 
     func load(_ screen: Screen) {
@@ -189,11 +149,12 @@ open class SwiftySettingsViewController : UITableViewController {
         self.title = screen.title
 
         // The toggle-section must update the settings view
-        for section in self.sections {
-            if let toggleSection = section as? ToggleSection {
-                toggleSection.setToggleUpdateClosure {
-                    self.tableView.reloadData()
-                }
+        for section in self.sections where section is ToggleSection {
+            (section as! ToggleSection).setToggleUpdateClosure {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100), execute: {
+                    [weak self] in
+                    self?.tableView.reloadData()
+                })
             }
         }
     }
@@ -208,55 +169,79 @@ extension SwiftySettingsViewController {
         let section = sections[indexPath.section]
         let node = section.items[indexPath.row]
 
-        guard let i_appearence = self.appearance else { return UITableViewCell() }
+        guard var i_appearance = self.appearance else { return UITableViewCell() }
 
         switch (node) {
         case let item as Switch:
             let cell = tableView.dequeueReusableCell(SwitchCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as TextOnly:
             let cell = tableView.dequeueReusableCell(TextOnlyCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as Slider:
             let cell = tableView.dequeueReusableCell(SliderCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as Option:
             let cell = tableView.dequeueReusableCell(OptionCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as OptionsButton:
             let cell = tableView.dequeueReusableCell(OptionsButtonCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as Screen:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as ToggleSection:
             let cell = tableView.dequeueReusableCell(SettingsCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.load(item)
             return cell
         case let item as TextField:
             let cell = tableView.dequeueReusableCell(TextFieldCell.self, type: .cell)
-            cell.accessibilityElementsHidden = !i_appearence.enableAccessibility
-            cell.appearance = i_appearence
+            cell.accessibilityElementsHidden = !i_appearance.enableAccessibility
+            if let textAppearanceOverride = item.textAppearanceOverride {
+                i_appearance.textAppearance = textAppearanceOverride
+            }
+            cell.appearance = i_appearance
             cell.textFieldDelegate = self
             cell.load(item)
             return cell
@@ -289,23 +274,23 @@ extension SwiftySettingsViewController {
     override open func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .header)
 
-        guard let i_appearence = self.appearance else { return nil }
+        guard let i_appearance = self.appearance else { return nil }
 
-        header.appearance = i_appearence
-        header.accessibilityElementsHidden = !i_appearence.enableAccessibility
+        header.appearance = i_appearance
+        header.accessibilityElementsHidden = !i_appearance.enableAccessibility
         header.load(sections[section].title)
         return header
     }
 
     override open func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 
-        guard let i_appearence = self.appearance else { return nil }
+        guard let i_appearance = self.appearance else { return nil }
 
-        if !i_appearence.hideFooter {
+        if !(i_appearance.tableViewAppearance?.hideFooter ?? false) {
             if let footerText = sections[section].footer  {
                 let footer = tableView.dequeueReusableCell(SectionHeaderFooter.self, type: .footer)
-                footer.appearance = i_appearence
-                footer.accessibilityElementsHidden = !i_appearence.enableAccessibility
+                footer.appearance = i_appearance
+                footer.accessibilityElementsHidden = !i_appearance.enableAccessibility
                 footer.load(footerText)
                 return footer
             }
@@ -336,16 +321,16 @@ extension SwiftySettingsViewController {
 
     override open func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
 
-        guard let i_appearence = self.appearance else { return CGFloat.leastNormalMagnitude }
+        guard let i_appearance = self.appearance else { return CGFloat.leastNormalMagnitude }
 
-        if i_appearence.hideFooter {
+        if i_appearance.tableViewAppearance?.hideFooter ?? false {
             return CGFloat.leastNormalMagnitude
         }
         return 44
     }
 
     override open func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
 
     override open func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -354,21 +339,22 @@ extension SwiftySettingsViewController {
 
         switch (node) {
         case let item as Screen:
-            let vc = SwiftySettingsViewController(appearance: Appearance(splitVC: self), screen: item)
-            let nc = self.navigationController
-            nc?.pushViewController(vc, animated: true)
+            let vc = SwiftySettingsViewController(appearance: self.appearance, screen: item)
+            self.screenTriggeredFromIndexPath = indexPath
+            self.navigationController?.pushViewController(vc, animated: true)
         case let item as OptionsButton:
             let screen = Screen(title: item.title) {
                 [Section(title: item.subTitle ?? "") { item.options }]
             }
-            let vc = SwiftySettingsViewController(appearance: Appearance(splitVC: self), screen: screen)
+            let vc = SwiftySettingsViewController(appearance: self.appearance, screen: screen)
+            self.screenTriggeredFromIndexPath = indexPath
             self.navigationController?.pushViewController(vc, animated: true)
         case let item as Option:
             item.selected = true
-            tableView.reloadData()
+            // Refresh the current section to display the newly selected option
+            tableView.reloadSections([indexPath.section], with: .automatic)
             if item.navigateBack {
                 let _ = navigationController?.popViewController(animated: true)
-                self.tableView.reloadData()
             }
         default:
             break
@@ -429,38 +415,17 @@ extension SwiftySettingsViewController : UITextFieldDelegate {
 
         let nc = NotificationCenter.default
 
-        observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillShow, object: nil,
+        observerTokens.append(nc.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil,
                                              queue: OperationQueue.main) { [weak self] note in
-                                                guard self != nil else { return }
+                                                guard let wSelf = self else { return }
 
-                                                guard let userInfo = note.userInfo as? [String: AnyObject],
-                                                    let keyboardFrameValue = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
-                                                    else {
-                                                        fatalError("Could not extract keyboard CGRect")
+                                                if let scrollToIndexPath = wSelf.editingIndexPath {
+                                                    DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(10), execute: {
+                                                        wSelf.tableView.scrollToRow(at: scrollToIndexPath,
+                                                                                    at: .middle,
+                                                                                    animated:false)
+                                                    })
                                                 }
-                                                let keyboardRect = keyboardFrameValue.cgRectValue
-                                                let contentInsets = UIEdgeInsets(top: 0.0,
-                                                                                 left: 0.0,
-                                                                                 bottom: keyboardRect.size.height,
-                                                                                 right: 0.0)
-
-                                                self!.storedContentInset = self!.tableView.contentInset
-
-                                                self!.tableView.contentInset = contentInsets;
-                                                self!.tableView.scrollIndicatorInsets = contentInsets;
-
-                                                if let scrollToIndexPath = self!.editingIndexPath {
-                                                    self!.tableView.scrollToRow(at: scrollToIndexPath,
-                                                                                at: .middle,
-                                                                                animated:false)
-                                                }
-        })
-        observerTokens.append(nc.addObserver(forName: NSNotification.Name.UIKeyboardWillHide, object: nil,
-                                             queue: OperationQueue.main) { [weak self] note in
-                                                guard self != nil else { return }
-
-                                                self!.tableView.contentInset = self!.storedContentInset;
-                                                self!.tableView.scrollIndicatorInsets = self!.storedContentInset;
         })
     }
 
@@ -482,38 +447,34 @@ extension SwiftySettingsViewController : UITextFieldDelegate {
 //MARK: Private
 
 private extension SwiftySettingsViewController {
-    func setupAppearence() {
-        self.appearance = Appearance(viewBackgroundColor: self.viewBackgroundColor,
-                                     cellBackgroundColor: self.cellBackgroundColor,
-                                     cellTextColor: self.cellTextColor,
-                                     cellSecondaryTextColor: self.cellSecondaryTextColor,
-                                     tintColor: self.tintColor,
-                                     textInputColor: self.textInputColor,
-                                     separatorColor: self.separatorColor,
-                                     selectionColor: self.selectionColor,
-                                     forceRoundedCorners: self.forceRoundedCorners,
-                                     hideFooter: self.hideFooter,
-                                     enableAccessibility: self.enableAccessibility,
-                                     headerFooterCellTextColor: self.headerFooterCellTextColor,
-                                     statusBarStyle: self.statusBarStyle)
+    
+    func setupDefaultAppearance() {
+        self.appearance = Appearance()
     }
     
     func setupTableView() {
 
-        guard let i_appearence = self.appearance else { return }
+        guard let i_appearance = self.appearance else { return }
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorInset = UIEdgeInsets.zero;
         tableView.estimatedRowHeight = 100
         tableView.estimatedSectionHeaderHeight = 44
-        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.rowHeight = UITableView.automaticDimension
 
-        tableView.keyboardDismissMode = .onDrag
+        tableView.keyboardDismissMode = .interactive
+        
+        extendedLayoutIncludesOpaqueBars = true
+        if #available(iOS 11.0, *) {
+            tableView.contentInsetAdjustmentBehavior = .always
+        } else {
+            self.automaticallyAdjustsScrollViewInsets = true
+        }
         
         // Configure appearance
-        tableView.backgroundColor = i_appearence.viewBackgroundColor
-        tableView.separatorColor = i_appearence.separatorColor;
+        tableView.backgroundColor = i_appearance.viewBackgroundColor
+        tableView.separatorColor = i_appearance.tableViewAppearance?.separatorColor
 
         tableView.registerClass(SwitchCell.self, type: .cell)
         tableView.registerClass(SliderCell.self, type: .cell)

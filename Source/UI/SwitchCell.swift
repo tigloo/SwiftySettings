@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 //
 
-import Foundation
 import UIKit
 
 class SwitchCell : SettingsCell {
@@ -33,7 +32,7 @@ class SwitchCell : SettingsCell {
     var item: Switch!
     let switchView = UISwitch()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
@@ -91,7 +90,7 @@ class SwitchCell : SettingsCell {
         switchView.tintColor = appearance?.tintColor
         switchView.onTintColor = appearance?.tintColor
         switchView.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        switchView.accessibilityTraits = UIAccessibilityTraitStaticText
+        switchView.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(switchView)
     }
 

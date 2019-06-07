@@ -32,7 +32,7 @@ class OptionsButtonCell : SettingsCell {
 
     let selectedOptionLabel = UILabel()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
@@ -96,9 +96,10 @@ class OptionsButtonCell : SettingsCell {
 
     override func configureAppearance(_ item: TitledNode) {
         super.configureAppearance(item)
-        selectedOptionLabel.textColor = appearance?.cellSecondaryTextColor
+        selectedOptionLabel.textColor = self.appearance?.textAppearance?.secondaryTextColor
+        selectedOptionLabel.font = self.appearance?.textAppearance?.secondaryTextFont
         selectedOptionLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        selectedOptionLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        selectedOptionLabel.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(selectedOptionLabel)
     }
 

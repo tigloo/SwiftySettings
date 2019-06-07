@@ -37,9 +37,10 @@ class SliderTests: QuickSpec {
 
             it("should trigger ValueChanged when value changes") {
                 let sliderKey = "key1"
-
-                triggersChangedValueFor(item: Slider(key: sliderKey,
-                                        title: "Title 1"),
+                let slider1 = Slider(key: sliderKey,
+                                     title: "Title 1")
+                slider1.storage = StorageStub()
+                triggersChangedValueFor(item: slider1,
                                         assertedKey: sliderKey,
                                         assertedValue: 89)
             }

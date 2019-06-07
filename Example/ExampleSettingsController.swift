@@ -29,38 +29,48 @@ import UIKit
 import SwiftyUserDefaults
 import SwiftySettings
 
-class Storage : SettingsStorageType {
+class Storage: SettingsStorageType {
+    subscript(key: DefaultsKey<Bool?>) -> Bool? {
+        get {
+            return Defaults[key]
+        }
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
+        }
+    }
     
-    subscript(key: String) -> Bool? {
+    subscript(key: DefaultsKey<Double?>) -> Double? {
         get {
-            return Defaults[key].bool
+            return Defaults[key]
         }
-        set {
-            Defaults[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
         }
     }
-    subscript(key: String) -> Float? {
+    
+    subscript(key: DefaultsKey<Int?>) -> Int? {
         get {
-            return Float(Defaults[key].doubleValue)
+            return Defaults[key]
         }
-        set {
-            Defaults[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
         }
     }
-    subscript(key: String) -> Int? {
+    
+    subscript(key: DefaultsKey<String?>) -> String? {
         get {
-            return Defaults[key].int
+            return Defaults[key]
         }
-        set {
-            Defaults[key] = newValue
-        }
-    }
-    subscript(key: String) -> String? {
-        get {
-            return Defaults[key].string
-        }
-        set {
-            Defaults[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                Defaults[key] = newValue
+            }
         }
     }
 }
@@ -85,7 +95,9 @@ class ExampleSettingsController: SwiftySettingsViewController {
         /* Top Down settings */
         settings = SwiftySettings(storage: storage, title: "Intelligent Home") {
             [Section(title: "Electricity") {
-                [OptionsButton(key: "tariff", title: "Tariff", subTitle: "Select a tariff") {
+                var textAppearanceOverride = self.appearance.textAppearance
+                textAppearanceOverride?.withTextColor(.red)
+                return [OptionsButton(key: "tariff", title: "Tariff", subTitle: "Select a tariff", textAppearanceOverride: textAppearanceOverride) {
                     [Option(title: "Day", optionId: 1, subTitle: "A Day setting"),
                      Option(title: "Night", optionId: 2),
                      Option(title: "Mixed", optionId: 3)]
@@ -135,7 +147,10 @@ class ExampleSettingsController: SwiftySettingsViewController {
              Section(title: "About") {
                 [TextOnly(title: "Version", subTitle: "1.0.0-leetal", icon: nil, onClickedClosure: {
                     print("Clicked!!")
-                })]
+                }),
+                 TextOnly(title: "Version", subTitle: "1.0.0-leetal", icon: nil, onClickedClosure: {
+                    print("Clicked!!")
+                 })]
                 }]
         }
     }
@@ -189,6 +204,10 @@ class ExampleSettingsController: SwiftySettingsViewController {
         mainScreen.include(section: alarmSection)
 
         settings = SwiftySettings(storage: storage, main: mainScreen)
+    }
+    
+    func updateAppearance() {
+        //appearance.
     }
 }
 

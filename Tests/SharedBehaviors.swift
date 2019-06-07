@@ -29,14 +29,14 @@ import Nimble
 
 @testable import SwiftySettings
 
-func triggersChangedValueFor<T: Equatable>(item item: Item<T>,
+func triggersChangedValueFor<T: Equatable>(item: Item<T>,
     assertedKey: String,
     assertedValue: T)
 
 {
     waitUntil(action: { done in
         item.valueChanged = { (key, value) -> Void in
-            expect(value == assertedValue)
+            expect(value).to(equal(assertedValue))
             expect(key).to(equal(assertedKey))
             done()
         }

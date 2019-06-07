@@ -1,13 +1,24 @@
 # Initial configuration
 platform :ios, '8.0'
 inhibit_all_warnings!
-use_frameworks!
 
-target :"Example" do
-    pod 'SwiftyUserDefaults'
+def shared_pods
+  use_frameworks!
+  
+  pod 'SwiftyUserDefaults', '~> 4.0.0'
 end
 
-target :"Tests" do
-    pod 'Quick', '~> 0.10.0'
-    pod 'Nimble', '~> 5.1.1'
+target "SwiftySettings" do
+  shared_pods
+end
+
+target "Example" do
+  shared_pods
+end
+
+target "Tests" do
+  shared_pods
+  
+  pod 'Quick', '~> 2.0.0'
+  pod 'Nimble', '~> 8.0.1'
 end

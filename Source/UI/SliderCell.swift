@@ -25,7 +25,6 @@
 // THE SOFTWARE.
 //
 
-import Foundation
 import UIKit
 
 class SliderCell : SettingsCell {
@@ -35,7 +34,7 @@ class SliderCell : SettingsCell {
     let valueLabel = UILabel()
     let sliderView = UISlider()
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
@@ -152,17 +151,19 @@ class SliderCell : SettingsCell {
 
         sliderView.tintColor = appearance?.tintColor
         sliderView.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        sliderView.accessibilityTraits = UIAccessibilityTraitStaticText
+        sliderView.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(sliderView)
 
-        titleLabel.textColor = appearance?.cellTextColor
+        titleLabel.font = appearance?.textAppearance?.font
+        titleLabel.textColor = appearance?.textAppearance?.textColor
         titleLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        titleLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        titleLabel.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(titleLabel)
 
-        valueLabel.textColor = appearance?.cellTextColor
+        valueLabel.font = appearance?.textAppearance?.font
+        valueLabel.textColor = appearance?.textAppearance?.textColor
         valueLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        valueLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        valueLabel.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(valueLabel)
     }
 

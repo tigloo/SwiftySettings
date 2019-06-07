@@ -25,12 +25,11 @@
 // THE SOFTWARE.
 //
 
-import Foundation
 import UIKit
 
 class SectionHeaderFooter : UITableViewHeaderFooterView {
 
-    var appearance: SwiftySettingsViewController.Appearance?
+    var appearance: Appearance?
     let titleLabel = UILabel()
     let spacing: CGFloat = 10
 
@@ -60,17 +59,17 @@ class SectionHeaderFooter : UITableViewHeaderFooterView {
     }
 
     func configureAppearance() {
-        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFontTextStyle.subheadline)
-        titleLabel.textColor = appearance?.headerFooterCellTextColor
+        titleLabel.font = UIFont.preferredFont(forTextStyle: UIFont.TextStyle.subheadline)
+        titleLabel.textColor = appearance?.tableViewAppearance?.headerFooterCellTextColor
         titleLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        titleLabel.accessibilityTraits = UIAccessibilityTraitStaticText | UIAccessibilityTraitHeader
+        titleLabel.accessibilityTraits = [UIAccessibilityTraits.staticText, UIAccessibilityTraits.header]
 
         self.isAccessibilityElement = false
         self.accessibilityElements = [contentView, titleLabel]
 
         contentView.backgroundColor = appearance?.viewBackgroundColor
         contentView.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        contentView.accessibilityTraits = UIAccessibilityTraitNone
+        contentView.accessibilityTraits = UIAccessibilityTraits.none
     }
 
     func setup() {

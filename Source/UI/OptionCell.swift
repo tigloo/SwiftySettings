@@ -25,12 +25,11 @@
 // THE SOFTWARE.
 //
 
-import Foundation
 import UIKit
 
 class OptionCell : SettingsCell {
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
     }
 
@@ -41,6 +40,7 @@ class OptionCell : SettingsCell {
     func load(_ item: Option) {
         super.load(item)
         accessoryType = item.selected ? .checkmark : .none;
-        self.isUserInteractionEnabled = !item.disabled
+        isUserInteractionEnabled = !item.disabled
+        selectionStyle = .none
     }
 }

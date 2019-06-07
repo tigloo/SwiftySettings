@@ -37,8 +37,11 @@ class SwitchTests: QuickSpec {
 
             it("should trigger ValueChanged when value changes") {
                 let switchKey = "key1"
-                triggersChangedValueFor(item: Switch(key: switchKey,
-                                        title: "Title 1"),
+                let switch1 = Switch(key: switchKey,
+                                     title: "Title 1")
+                switch1.storage = StorageStub()
+                
+                triggersChangedValueFor(item: switch1,
                                         assertedKey: switchKey,
                                         assertedValue: true)
             }

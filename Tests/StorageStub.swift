@@ -27,41 +27,61 @@
 //
 
 import Foundation
+import SwiftyUserDefaults
+
 @testable import SwiftySettings
+
+extension DefaultsKeys {
+    static let key1 = DefaultsKey<Bool?>("key1")
+    static let key2 = DefaultsKey<Double?>("key2")
+    static let key3 = DefaultsKey<Int?>("key3")
+    static let key4 = DefaultsKey<Int?>("key4")
+}
 
 class StorageStub : SettingsStorageType {
     var data: [String: Any] = [:]
-
-    subscript(key: String) -> Bool? {
+    
+    subscript(key: DefaultsKey<Bool?>) -> Bool? {
         get {
-            return data[key] as? Bool
+            return data[key._key] as? Bool
         }
-        set {
-            data[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                data[key._key] = newValue
+            }
         }
     }
-    subscript(key: String) -> Float? {
+    
+    subscript(key: DefaultsKey<Double?>) -> Double? {
         get {
-            return data[key] as? Float
+            return data[key._key] as? Double
         }
-        set {
-            data[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                data[key._key] = newValue
+            }
         }
     }
-    subscript(key: String) -> Int? {
+    
+    subscript(key: DefaultsKey<Int?>) -> Int? {
         get {
-            return data[key] as? Int
+            return data[key._key] as? Int
         }
-        set {
-            data[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                data[key._key] = newValue
+            }
         }
     }
-    subscript(key: String) -> String? {
+    
+    subscript(key: DefaultsKey<String?>) -> String? {
         get {
-            return data[key] as? String
+            return data[key._key] as? String
         }
-        set {
-            data[key] = newValue
+        set(newValue) {
+            if let newValue = newValue {
+                data[key._key] = newValue
+            }
         }
     }
 }

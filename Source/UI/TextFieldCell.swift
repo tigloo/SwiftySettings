@@ -35,7 +35,7 @@ class TextFieldCell : SettingsCell {
     let textField = UITextField()
     weak var textFieldDelegate:UITextFieldDelegate? = nil
 
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
     }
@@ -144,15 +144,15 @@ class TextFieldCell : SettingsCell {
         textField.borderStyle = .none
         textField.textAlignment = .right
         textField.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        textField.accessibilityTraits = UIAccessibilityTraitStaticText
+        textField.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(textField)
 
-        titleLabel.font = UIFont.systemFont(ofSize: 18)
-        titleLabel.textColor = appearance?.cellTextColor
+        titleLabel.font = appearance?.textAppearance?.font
+        titleLabel.textColor = appearance?.textAppearance?.textColor
         titleLabel.adjustsFontSizeToFitWidth = true
-        titleLabel.minimumScaleFactor = 0.3
+        titleLabel.minimumScaleFactor = 0.7
         titleLabel.isAccessibilityElement = appearance?.enableAccessibility ?? false
-        titleLabel.accessibilityTraits = UIAccessibilityTraitStaticText
+        titleLabel.accessibilityTraits = UIAccessibilityTraits.staticText
         self.accessibilityElements?.append(titleLabel)
     }
 
