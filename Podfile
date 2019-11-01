@@ -5,7 +5,7 @@ inhibit_all_warnings!
 def shared_pods
   use_frameworks!
   
-  pod 'SwiftyUserDefaults', '~> 4.0.0'
+  pod 'SwiftyUserDefaults', '5.0.0-beta.5'
 end
 
 target "SwiftySettings" do
