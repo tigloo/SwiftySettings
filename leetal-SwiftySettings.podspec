@@ -10,5 +10,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Source/**/*.swift'
   s.requires_arc = true
   s.swift_version = '5.0'
-  s.dependency "SwiftyUserDefaults" , '4.0.0'
+  s.dependency "SwiftyUserDefaults" , '5.0.0-beta.5'
 end
